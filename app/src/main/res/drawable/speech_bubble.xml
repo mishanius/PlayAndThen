@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Speech bubble main body -->
+    <item>
+        <shape xmlns:android="http://schemas.android.com/apk/res/android"
+            android:shape="rectangle">
+            <solid android:color="#FFFFFF"/>
+            <corners android:radius="18dp"/>
+            <!-- comic-style dark outline -->
+            <stroke android:width="3dp" android:color="#222222"/>
+            <padding
+                android:left="16dp"
+                android:top="12dp"
+                android:right="16dp"
+                android:bottom="12dp"/>
+        </shape>
+
+    </item>
+    
+    <!-- Speech bubble pointer (tail) -->
+    <item
+        android:left="24dp"
+        android:top="8dp">
+        <rotate
+            android:fromDegrees="45"
+            android:toDegrees="45"
+            android:pivotX="50%"
+            android:pivotY="50%">
+            <shape android:shape="rectangle">
+                <solid android:color="#FFFFFF" />
+                <stroke 
+                    android:width="2dp" 
+                    android:color="#2E7D32" />
+                <size 
+                    android:width="16dp" 
+                    android:height="16dp" />
+            </shape>
+        </rotate>
+    </item>
+    
+</layer-list>

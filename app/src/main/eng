@@ -1,0 +1,37 @@
+2025-12-21 23:13:10.948  7102-7102  TreeDump                com.ptitsyn.playandthen                D  Reason=YT event=2048
+                                                                                                    • FrameLayout
+                                                                                                      • ViewGroup  desc="regular video player"  [focusable]
+                                                                                                      • ImageView  desc="Back"  [clickable]  [focusable]
+                                                                                                      • ImageView  desc="Bounce Patrol - Kids Songs double tap to navigate to channel"  [clickable]  [focusable]
+                                                                                                      • TextView  text="Finger Family Song - Mega Finger Family Collection! Frozen, Minions, Elmo, Nursery Rhymes & More!"
+                                                                                                      • FrameLayout  [clickable]  [focusable]
+                                                                                                        • Button  text="SUBSCRIBE"  desc="Subscribe to this channel"
+                                                                                                      • Button  desc="Cast. Disconnected"  [clickable]  [focusable]
+                                                                                                      • ImageView  desc="volume control"  [clickable]  [focusable]
+                                                                                                      • ImageView  desc="More options"  [clickable]  [focusable]
+                                                                                                      • ImageView  desc="Previous video"  [clickable]  [focusable]
+                                                                                                      • ImageView  desc="Next video"  [clickable]  [focusable]
+                                                                                                      • ImageView  desc="Pause video"  [clickable]  [focusable]
+                                                                                                      • View  desc="6 minutes 56 seconds of 7 minutes 3 seconds"  [clickable]  [focusable]
+                                                                                                      • ViewGroup
+                                                                                                        • StaggeredGridLayoutManager  [scrollable]  [focusable]
+                                                                                                          • Button  desc="Bianca & Baby Born doll! Kids pretend play with dolls & Funny story for children."  [clickable]  [focusable]
+                                                                                                            • ViewGroup
+                                                                                                              • ViewGroup  text="5 minutes, 32 seconds"  desc="5 minutes, 32 seconds"
+                                                                                                          • Button  desc="Elsa Saves Anna | Frozen Recreated | Frozen"  [clickable]  [focusable]
+                                                                                                            • ViewGroup
+                                                                                                              • ViewGroup  text="2 minutes, 28 seconds"  desc="2 minutes, 28 seconds"
+                                                                                                          • Button  desc="🚓 Çocuklar gerçek polis arabası ve ambulans ile oynar 🚑  Çocuklar taklit oyunu ! ⛑ Kidibli"  [clickable]  [focusable]
+                                                                                                            • ViewGroup
+                                                                                                              • ViewGroup  text="10 minutes, 36 seconds"  desc="10 minutes, 36 seconds"
+                                                                                                          • Button  desc="The Finger Family Song | Finger Family | Nursery Rhymes | Kids Songs | Baby Songs | Family Finger"  [clickable]  [focusable]
+                                                                                                            • ViewGroup
+                                                                                                              • ViewGroup  text="5 minutes, 48 seconds"  desc="5 minutes, 48 seconds"
+                                                                                                              • ImageView
+                                                                                                          • Button  desc="DIY Arts and Crafts at Home Game with Frozen Heroes and Ellie Sparkles"  [clickable]  [focusable]
+                                                                                                            • ViewGroup
+                                                                                                              • ViewGroup  text="24 minutes, 5 seconds"  desc="24 minutes, 5 seconds"
+                                                                                                      • FrameLayout  [clickable]  [focusable]
+                                                                                                        • LinearLayout  [clickable]  [focusable]
+                                                                                                          • ImageView  desc="parental control button"
+                                                                                                    ---- nodes dumped: 35 (maxDepth=160, maxNodes=10000, onlyInteresting=false)

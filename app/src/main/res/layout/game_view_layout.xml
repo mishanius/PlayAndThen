@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF8E1">
+
+    <TextView
+        android:id="@+id/hugeNumberTextText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/speech_bubble_bg"
+        android:text="7"
+        app:layout_constraintTop_toTopOf="@id/gameContentContainer"
+        app:layout_constraintBottom_toBottomOf="@id/gameContentContainer"
+        app:layout_constraintStart_toEndOf="@id/gameContentContainer"
+        android:textSize="142sp"
+        android:textStyle="bold"
+        android:textColor="#222222"
+        android:maxWidth="560dp"/>
+
+    <!-- Father Character Image - responsive width on the right -->
+    <ImageView
+        android:id="@+id/characterImage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:scaleType="fitEnd"
+        android:src="@drawable/father"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.46"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"/>
+
+
+
+    <!-- Speaker Button with Glow Effect -->
+    <ImageView
+        android:id="@+id/speakerButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/speaker"
+        android:scaleType="fitCenter"
+        android:clickable="true"
+        android:focusable="true"
+        android:contentDescription="Play audio"
+        app:layout_constraintBottom_toBottomOf="@id/characterImage"
+        app:layout_constraintTop_toTopOf="@id/characterImage"
+        app:layout_constraintStart_toStartOf="@id/characterImage"
+        app:layout_constraintEnd_toEndOf="@id/characterImage"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="28dp"/>
+
+
+    <!-- Speech Bubble -->
+    <FrameLayout
+        android:id="@+id/speechBubbleWrap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/characterImage"
+        app:layout_constraintStart_toStartOf="@id/characterImage">
+
+<!--        &lt;!&ndash; Bubble body &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/speechBubbleText"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/speech_bubble_bg"-->
+<!--            android:text="Count the balloons and choose the cell with 0 balloons!"-->
+<!--            android:textSize="25sp"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="#222222"-->
+<!--            android:maxWidth="560dp"/>-->
+
+
+
+
+    </FrameLayout>
+
+
+    <!-- Left side content -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/gameContentContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/characterImage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+
+
+
+        <!-- Success/Failure Message -->
+        <TextView
+            android:id="@+id/gameMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="12dp"
+            android:background="#80000000"
+            android:textColor="#FFFFFF"
+            android:visibility="gone"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Game Grid: fills remaining space -->
+        <GridLayout
+            android:id="@+id/gameGrid"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:columnCount="3"
+            android:rowCount="2"
+            android:useDefaultMargins="true"
+            android:alignmentMode="alignMargins"
+            app:layout_constraintTop_toBottomOf="@id/gameMessage"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp">
+
+            <!-- Helper style: each cell expands equally -->
+            <FrameLayout
+                android:id="@+id/cell0"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                android:background="@drawable/cell_background"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:id="@+id/cellContainer0"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="8dp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/cell1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                android:background="@drawable/cell_background"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:id="@+id/cellContainer1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="8dp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/cell2"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                android:background="@drawable/cell_background"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:id="@+id/cellContainer2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="8dp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/cell3"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                android:background="@drawable/cell_background"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:id="@+id/cellContainer3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="8dp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/cell4"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                android:background="@drawable/cell_background"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:id="@+id/cellContainer4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="8dp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/cell5"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                android:background="@drawable/cell_background"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:id="@+id/cellContainer5"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="8dp" />
+            </FrameLayout>
+
+        </GridLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

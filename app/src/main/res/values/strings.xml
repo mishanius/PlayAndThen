@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">PlayAndThen</string>
+    <string name="accessibility_service_description">PlayAndThen accessibility service captures and displays all text content visible on the screen to help users monitor device activity.</string>
+    
+    <!-- Game instructions for speech bubble -->
+    <string name="game_instruction_initial">Count the balloons and choose the cell with %d balloons!</string>
+    <string name="game_instruction_success">Great job! You found the right number!</string>
+    <string name="game_instruction_retry">Try again! Count carefully and look for %d balloons.</string>
+</resources>

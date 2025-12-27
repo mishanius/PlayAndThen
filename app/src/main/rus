@@ -1,0 +1,33 @@
+2025-12-21 23:11:30.816  7102-7102  TreeDump                com.ptitsyn.playandthen                D  Reason=YT event=2048
+                                                                                                    • FrameLayout
+                                                                                                      • ViewGroup  desc="regular video player"  [focusable]
+                                                                                                      • ImageView  desc="Back"  [clickable]  [focusable]
+                                                                                                      • TextView  text="Принцесса невеста поет Если любишь ты"
+                                                                                                      • Button  desc="Cast. Disconnected"  [clickable]  [focusable]
+                                                                                                      • ImageView  desc="volume control"  [clickable]  [focusable]
+                                                                                                      • ImageView  desc="More options"  [clickable]  [focusable]
+                                                                                                      • ImageView  desc="Previous video"  [clickable]  [focusable]
+                                                                                                      • ImageView  desc="Next video"  [clickable]  [focusable]
+                                                                                                      • ImageView  desc="Pause video"  [clickable]  [focusable]
+                                                                                                      • View  desc="6 minutes 56 seconds of 7 minutes 3 seconds"  [clickable]  [focusable]
+                                                                                                      • ViewGroup
+                                                                                                        • StaggeredGridLayoutManager  [scrollable]  [focusable]
+                                                                                                          • Button  desc="Русалочка НЕВЕСТА! сказочная свадьба"  [clickable]  [focusable]
+                                                                                                            • ViewGroup
+                                                                                                              • ViewGroup  text="8 minutes, 35 seconds"  desc="8 minutes, 35 seconds"
+                                                                                                          • Button  desc="Barbie Ellie Doll Comes to Life Cleaning Adventure"  [clickable]  [focusable]
+                                                                                                            • ViewGroup
+                                                                                                              • ViewGroup  text="10 minutes, 51 seconds"  desc="10 minutes, 51 seconds"
+                                                                                                          • Button  desc="Принцесса Невеста! Крысиная свадьба!"  [clickable]  [focusable]
+                                                                                                            • ViewGroup
+                                                                                                              • ViewGroup  text="29 minutes, 26 seconds"  desc="29 minutes, 26 seconds"
+                                                                                                          • Button  desc="Ameli - Sanremo (Official Music Video)"  [clickable]  [focusable]
+                                                                                                            • ViewGroup
+                                                                                                              • ViewGroup  text="4 minutes, 47 seconds"  desc="4 minutes, 47 seconds"
+                                                                                                          • Button  desc="Настя как ПРИНЦЕССА Золушка на утреннике Платье и ДЕНЬ РОЖДЕНИЯ Саши"  [clickable]  [focusable]
+                                                                                                            • ViewGroup
+                                                                                                              • ViewGroup  text="13 minutes, 27 seconds"  desc="13 minutes, 27 seconds"
+                                                                                                      • FrameLayout  [clickable]  [focusable]
+                                                                                                        • LinearLayout  [clickable]  [focusable]
+                                                                                                          • ImageView  desc="parental control button"
+                                                                                                    ---- nodes dumped: 31 (maxDepth=160, maxNodes=10000, onlyInteresting=false)
