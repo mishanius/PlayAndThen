@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Words Game - Demo</title>
+    <style>
+        /* Debug Panel Styles Only */
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        #debug-panel {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        
+        #debug-panel h2 {
+            margin: 0 0 15px 0;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .controls label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .controls input {
+            width: 70px;
+            padding: 8px;
+            border-radius: 4px;
+            border: none;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            background: white;
+            color: #667eea;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        /* Game iframe container */
+        #game-frame {
+            position: fixed;
+            top: 120px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: calc(100vh - 120px);
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="debug-panel">
+        <h2>🎯 Match Words Game - Debug Panel</h2>
+        <div class="controls">
+            <label>
+                Round: <input type="number" id="round" value="1" min="1">
+            </label>
+            <label>
+                Total: <input type="number" id="total" value="5" min="1">
+            </label>
+            <button class="btn" onclick="startGame()">Start Game</button>
+            <button class="btn" onclick="resetGame()">Reset</button>
+        </div>
+    </div>
+    
+    <iframe id="game-frame" src="dist/index.html"></iframe>
+    
+    <script>
+        let gameWindow;
+        
+        window.addEventListener('load', () => {
+            const iframe = document.getElementById('game-frame');
+            
+            iframe.onload = () => {
+                gameWindow = iframe.contentWindow;
+                
+                // Mock Android interface
+                gameWindow.Android = {
+                    onGameCompleted: () => {
+                        console.log('✅ Game completed!');
+                        alert('All words matched! 🎉');
+                    }
+                };
+                
+                // Auto-start after iframe loads
+                setTimeout(() => startGame(), 500);
+            };
+        });
+        
+        function startGame() {
+            const round = parseInt(document.getElementById('round').value);
+            const total = parseInt(document.getElementById('total').value);
+            
+            if (gameWindow && gameWindow.initGame) {
+                gameWindow.initGame({ currentRound: round, totalRounds: total });
+                console.log(`🎮 Started game - Round ${round}/${total}`);
+            } else {
+                console.error('Game not loaded yet');
+            }
+        }
+        
+        function resetGame() {
+            if (gameWindow && gameWindow.resetGame) {
+                gameWindow.resetGame();
+                console.log('🔄 Game reset');
+            }
+        }
+    </script>
+</body>
+</html>

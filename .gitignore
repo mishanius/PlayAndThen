@@ -14,3 +14,4 @@
 .cxx
 local.properties
 *.ogg
+node_modules/

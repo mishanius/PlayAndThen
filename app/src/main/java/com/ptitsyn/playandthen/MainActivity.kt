@@ -30,12 +30,46 @@ class MainActivity: AppCompatActivity() {
         findViewById<Button>(R.id.testOverlayButton)?.setOnClickListener {
             testOverlay()
         }
+        
+        findViewById<Button>(R.id.testMatchWordsButton)?.setOnClickListener {
+            testMatchWordsGame()
+        }
     }
     
     private fun testOverlay() {
         if (Settings.canDrawOverlays(this)) {
-            GameOverlayService.startGameOverlay(this)
+            GameOverlayService.startGameOverlay(this, GameParams(numberOfRounds = 1))
             Toast.makeText(this, "🎮 Game overlay started! Complete the counting game to dismiss it.", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this, "Overlay permission required to test the game", Toast.LENGTH_SHORT).show()
+            requestOverlayPermission()
+        }
+    }
+    
+    private fun testMatchWordsGame() {
+        if (Settings.canDrawOverlays(this)) {
+            // Create Match Words game overlay
+            val gameView = GridGameJs(
+                context = this,
+                currentRound = 1,
+                totalRounds = 1,
+                gameType = "match-words"
+            )
+            
+            gameView.onGameCompleted = {
+                Toast.makeText(this, "🎉 Match Words game completed!", Toast.LENGTH_SHORT).show()
+                // Remove the game view
+                (gameView.parent as? android.view.ViewGroup)?.removeView(gameView)
+            }
+            
+            // Add game view to activity
+            val rootView = findViewById<android.view.ViewGroup>(android.R.id.content)
+            rootView.addView(gameView, android.view.ViewGroup.LayoutParams(
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT
+            ))
+            
+            Toast.makeText(this, "🎯 Match Words game started! Drag words to emojis.", Toast.LENGTH_LONG).show()
         } else {
             Toast.makeText(this, "Overlay permission required to test the game", Toast.LENGTH_SHORT).show()
             requestOverlayPermission()
@@ -92,5 +126,19 @@ class MainActivity: AppCompatActivity() {
         
         // Show test button
         findViewById<Button>(R.id.testOverlayButton)?.visibility = android.view.View.VISIBLE
+        findViewById<Button>(R.id.testMatchWordsButton)?.visibility = android.view.View.VISIBLE
+        
+        // Start debug button service (debug builds only)
+        if (BuildConfig.SHOW_DEBUG_BUTTON) {
+            DebugButtonService.start(this)
+        }
+    }
+    
+    override fun onDestroy() {
+        super.onDestroy()
+        // Stop debug button service when app is destroyed
+        if (BuildConfig.SHOW_DEBUG_BUTTON) {
+            DebugButtonService.stop(this)
+        }
     }
 }

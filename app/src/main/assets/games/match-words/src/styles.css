@@ -1,0 +1,173 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+}
+
+#game-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    position: relative;
+}
+
+.match-words-layout {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 900px;
+    height: 100%;
+    gap: 100px;
+}
+
+.words-column,
+.emojis-column {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    flex: 1;
+}
+
+.word-item,
+.emoji-item {
+    background: white;
+    padding: 20px 30px;
+    border-radius: 15px;
+    font-size: 32px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.word-item {
+    color: #667eea;
+}
+
+.emoji-item {
+    font-size: 48px;
+}
+
+.word-item:hover,
+.emoji-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.word-item:active,
+.emoji-item:active {
+    transform: scale(0.95);
+}
+
+.word-item.drawing {
+    background: #667eea;
+    color: white;
+    transform: scale(1.1);
+}
+
+.word-item.matched,
+.emoji-item.matched {
+    background: #4ade80;
+    color: white;
+    cursor: default;
+    animation: matchSuccess 0.6s ease-out;
+}
+
+.emoji-item.wrong {
+    background: #f87171;
+    animation: shake 0.5s ease-out;
+}
+
+@keyframes matchSuccess {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15) rotate(5deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+#match-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 10;
+}
+
+@media (max-width: 768px) {
+    .match-words-layout {
+        gap: 50px;
+        padding: 20px;
+    }
+
+    .word-item,
+    .emoji-item {
+        padding: 15px 20px;
+        font-size: 24px;
+    }
+
+    .emoji-item {
+        font-size: 36px;
+    }
+
+    .words-column,
+    .emojis-column {
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .match-words-layout {
+        gap: 30px;
+        padding: 15px;
+    }
+
+    .word-item,
+    .emoji-item {
+        padding: 12px 16px;
+        font-size: 20px;
+    }
+
+    .emoji-item {
+        font-size: 32px;
+    }
+
+    .words-column,
+    .emojis-column {
+        gap: 15px;
+    }
+}

@@ -25,9 +25,21 @@ class GameOverlayService : Service() {
         const val ACTION_SHOW_GAME = "com.ptitsyn.playandthen.SHOW_GAME"
         const val ACTION_HIDE_GAME = "com.ptitsyn.playandthen.HIDE_GAME"
         
-        fun startGameOverlay(context: Context) {
+        const val EXTRA_NUMBER_OF_ROUNDS = "extra_number_of_rounds"
+        const val EXTRA_GAME_TYPE = "extra_game_type"
+        const val EXTRA_FORCE_SINGLE_ROUND = "extra_force_single_round"
+        
+        // Game type constants
+        const val GAME_TYPE_NUMBERS_KT = "numbers_kt"
+        const val GAME_TYPE_ALPHABET_KT = "alphabet_kt"
+        const val GAME_TYPE_BALLOONS_KT = "balloons_kt"
+        const val GAME_TYPE_NUMBERS_TS = "numbers_ts"
+        const val GAME_TYPE_MATCH_WORDS_TS = "match_words_ts"
+        
+        fun startGameOverlay(context: Context, gameParams: GameParams) {
             val intent = Intent(context, GameOverlayService::class.java).apply {
                 action = ACTION_SHOW_GAME
+                putExtra(EXTRA_NUMBER_OF_ROUNDS, gameParams.numberOfRounds)
             }
             context.startForegroundService(intent)
         }
@@ -44,6 +56,13 @@ class GameOverlayService : Service() {
     private var overlayView: View? = null
     private var gameView: GridGame? = null
     private var isOverlayShowing = false
+    
+    // Round management
+    private var numberOfRounds: Int = 1
+    private var currentRound: Int = 0
+    
+    // Forced game type (from debug button)
+    private var forcedGameType: String? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -56,8 +75,27 @@ class GameOverlayService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
-            ACTION_SHOW_GAME -> showGameOverlay()
+            ACTION_SHOW_GAME -> {
+                numberOfRounds = intent.getIntExtra(EXTRA_NUMBER_OF_ROUNDS, 1)
+                currentRound = 0
+                forcedGameType = null
+                Log.d(TAG, "Starting game overlay with $numberOfRounds rounds")
+                showGameOverlay()
+            }
             ACTION_HIDE_GAME -> hideGameOverlay()
+            else -> {
+                // Handle debug button launch (no action, just extras)
+                val gameType = intent?.getStringExtra(EXTRA_GAME_TYPE)
+                val forceSingleRound = intent?.getBooleanExtra(EXTRA_FORCE_SINGLE_ROUND, false) ?: false
+                
+                if (gameType != null) {
+                    forcedGameType = gameType
+                    numberOfRounds = if (forceSingleRound) 1 else intent.getIntExtra(EXTRA_NUMBER_OF_ROUNDS, 1)
+                    currentRound = 0
+                    Log.d(TAG, "Starting forced game: $gameType with $numberOfRounds rounds")
+                    showGameOverlay()
+                }
+            }
         }
         return START_STICKY
     }
@@ -163,32 +201,83 @@ class GameOverlayService : Service() {
             }
         }
 
-        // Randomly select and create one of the three game modes
-        val selectedGame = when ((0..2).random()) {
+        // Select game with variety logic - avoid recently played games
+        val gameIndex = selectNextGame()
+        currentRound++
+        
+        val selectedGame: View = when (gameIndex) {
             0 -> {
-                Log.d(TAG, "Selected NumbersGame")
-                NumbersGame(this)
+                Log.d(TAG, "Selected NumbersGame (round $currentRound/$numberOfRounds)")
+                NumbersGame(this).also { game ->
+                    gameView = game
+                    game.onGameCompleted = {
+                        Log.d(TAG, "Round $currentRound/$numberOfRounds completed")
+                        onRoundCompleted()
+                    }
+                }
             }
             1 -> {
-                Log.d(TAG, "Selected BloonsGame")
-                BloonsGame(this)
+                Log.d(TAG, "Selected BloonsGame (round $currentRound/$numberOfRounds)")
+                BloonsGame(this).also { game ->
+                    gameView = game
+                    game.onGameCompleted = {
+                        Log.d(TAG, "Round $currentRound/$numberOfRounds completed")
+                        onRoundCompleted()
+                    }
+                }
+            }
+            2 -> {
+                Log.d(TAG, "Selected AlphabetGame (round $currentRound/$numberOfRounds)")
+                AlphabetGame(this).also { game ->
+                    gameView = game
+                    game.onGameCompleted = {
+                        Log.d(TAG, "Round $currentRound/$numberOfRounds completed")
+                        onRoundCompleted()
+                    }
+                }
+            }
+            3 -> {
+                Log.d(TAG, "Selected NumbersGameTS (JS/TS) (round $currentRound/$numberOfRounds)")
+                GridGameJs(
+                    context = this,
+                    currentRound = currentRound,
+                    totalRounds = numberOfRounds,
+                    gameType = "numbers"
+                ).also { game ->
+                    game.onGameCompleted = {
+                        Log.d(TAG, "Round $currentRound/$numberOfRounds completed")
+                        onRoundCompleted()
+                    }
+                }
+            }
+            4 -> {
+                Log.d(TAG, "Selected MatchWordsGame (JS/TS) (round $currentRound/$numberOfRounds)")
+                GridGameJs(
+                    context = this,
+                    currentRound = currentRound,
+                    totalRounds = numberOfRounds,
+                    gameType = "match-words"
+                ).also { game ->
+                    game.onGameCompleted = {
+                        Log.d(TAG, "Round $currentRound/$numberOfRounds completed")
+                        onRoundCompleted()
+                    }
+                }
             }
             else -> {
-                Log.d(TAG, "Selected AlphabetGame")
-                AlphabetGame(this)
-            }
-        }
-        
-        // Configure game completion callback
-        gameView = selectedGame.apply {
-            onGameCompleted = {
-                Log.d(TAG, "Game completed! Hiding overlay...")
-                hideGameOverlay()
+                Log.d(TAG, "Selected NumbersGame (Kotlin fallback) (round $currentRound/$numberOfRounds)")
+                NumbersGame(this).also { game ->
+                    gameView = game
+                    game.onGameCompleted = {
+                        Log.d(TAG, "Round $currentRound/$numberOfRounds completed")
+                        onRoundCompleted()
+                    }
+                }
             }
         }
 
         // Add game view to container
-        container.addView(gameView)
+        container.addView(selectedGame)
 
         return container
     }
@@ -215,6 +304,74 @@ class GameOverlayService : Service() {
         }
     }
 
+    /**
+     * Selects a random game (0-4) or returns forced game type.
+     * 0 = NumbersGame (Kotlin)
+     * 1 = BloonsGame (Kotlin)
+     * 2 = AlphabetGame (Kotlin)
+     * 3 = NumbersGameTS (JavaScript/TypeScript)
+     * 4 = MatchWordsGame (JavaScript/TypeScript)
+     */
+    private fun selectNextGame(): Int {
+        // If forced game type is set, use it
+        forcedGameType?.let { type ->
+            return when (type) {
+                GAME_TYPE_NUMBERS_KT -> 0
+                GAME_TYPE_BALLOONS_KT -> 1
+                GAME_TYPE_ALPHABET_KT -> 2
+                GAME_TYPE_NUMBERS_TS -> 3
+                GAME_TYPE_MATCH_WORDS_TS -> 4
+                else -> 3
+            }
+        }
+        
+        return 3;//(0..4).random()
+    }
+    
+    /**
+     * Called when a round is completed.
+     * Either shows next round or hides overlay if all rounds are done.
+     */
+    private fun onRoundCompleted() {
+        if (currentRound < numberOfRounds) {
+            // More rounds to play - transition to next game
+            Log.d(TAG, "Transitioning to next round ($currentRound/$numberOfRounds)")
+            transitionToNextRound()
+        } else {
+            // All rounds complete - hide overlay
+            Log.d(TAG, "All rounds completed! Hiding overlay...")
+            hideGameOverlay()
+        }
+    }
+    
+    /**
+     * Transitions from current game to the next round.
+     */
+    private fun transitionToNextRound() {
+        try {
+            // Remove current game
+            if (overlayView != null && gameView != null) {
+                (overlayView as? ViewGroup)?.removeView(gameView)
+                gameView = null
+            }
+            
+            // Create and add new game
+            val newGameView = createOverlayView()
+            if (overlayView != null) {
+                windowManager?.removeView(overlayView)
+            }
+            
+            overlayView = newGameView
+            windowManager?.addView(overlayView, createLayoutParams())
+            
+            Log.d(TAG, "Transitioned to next round successfully")
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to transition to next round", e)
+            hideGameOverlay()
+        }
+    }
+    
     private fun hideGameOverlay() {
         try {
             if (isOverlayShowing && overlayView != null) {
