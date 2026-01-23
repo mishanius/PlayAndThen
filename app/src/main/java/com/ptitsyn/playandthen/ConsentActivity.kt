@@ -10,23 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 
 class ConsentActivity : AppCompatActivity() {
 
-    companion object {
-        private const val PREFS_NAME = "playandthen_consent"
-        private const val KEY_CONSENT_GIVEN = "accessibility_consent_given"
-
-        fun hasConsent(context: Context): Boolean {
-            return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-                .getBoolean(KEY_CONSENT_GIVEN, false)
-        }
-
-        fun setConsent(context: Context, granted: Boolean) {
-            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-                .edit()
-                .putBoolean(KEY_CONSENT_GIVEN, granted)
-                .apply()
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_consent)
@@ -41,13 +24,38 @@ class ConsentActivity : AppCompatActivity() {
 
         acceptButton.setOnClickListener {
             setConsent(this, true)
-            startActivity(Intent(this, MainActivity::class.java))
+            Toast.makeText(this, "✅ PlayAndThen is now active!", Toast.LENGTH_SHORT).show()
             finish()
         }
 
         declineButton.setOnClickListener {
-            Toast.makeText(this, "Consent is required to use PlayAndThen", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Consent is required. Accessibility service will be disabled.", Toast.LENGTH_LONG).show()
+            setConsent(this, false)
             finish()
+        }
+    }
+    
+    companion object {
+        private const val PREFS_NAME = "playandthen_consent"
+        private const val KEY_CONSENT_GIVEN = "accessibility_consent_given"
+        const val KEY_CONSENT_DECLINED = "accessibility_consent_declined"
+
+        fun hasConsent(context: Context): Boolean {
+            return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .getBoolean(KEY_CONSENT_GIVEN, false)
+        }
+        
+        fun wasDeclined(context: Context): Boolean {
+            return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .getBoolean(KEY_CONSENT_DECLINED, false)
+        }
+
+        fun setConsent(context: Context, granted: Boolean) {
+            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .edit()
+                .putBoolean(KEY_CONSENT_GIVEN, granted)
+                .putBoolean(KEY_CONSENT_DECLINED, !granted)
+                .apply()
         }
     }
 }

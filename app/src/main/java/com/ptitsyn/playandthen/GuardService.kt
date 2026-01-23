@@ -53,11 +53,15 @@ class GuardService : AccessibilityService() {
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null) return
         
-        // If consent was pending, check if it's now given
+        // If consent was pending, check status
         if (consentPending) {
             if (ConsentActivity.hasConsent(this)) {
                 consentPending = false
                 initializeGuardManager()
+            } else if (ConsentActivity.wasDeclined(this)) {
+                Log.w(TAG, "Consent was declined. Disabling service.")
+                disableSelf()
+                return
             } else {
                 return // Still waiting for consent
             }
