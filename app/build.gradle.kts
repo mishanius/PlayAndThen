@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.ptitsyn.playandthen"
-    compileSdk = 33
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.ptitsyn.playandthen"
-        minSdk = 33
-        targetSdk = 33
+        minSdk = 26
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
