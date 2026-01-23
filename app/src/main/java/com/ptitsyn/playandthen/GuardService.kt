@@ -20,34 +20,52 @@ class GuardService : AccessibilityService() {
     // GuardManager handles all state management and interactions
     private lateinit var guardManager: GuardManager
 
+    private var consentPending = false
+
     override fun onServiceConnected() {
         super.onServiceConnected()
         
         // Check if user has given consent
         if (!ConsentActivity.hasConsent(this)) {
             Log.w(TAG, "Accessibility service enabled but consent not given. Launching consent screen.")
+            consentPending = true
             
             // Launch consent activity
             val intent = Intent(this, ConsentActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             startActivity(intent)
-            
-            // Disable service until consent is given
-            disableSelf()
             return
         }
         
-        // Initialize GuardManager with gesture dispatcher
-        guardManager = GuardManager(this) { gesture, callback ->
-            dispatchGesture(gesture, callback, null)
+        initializeGuardManager()
+    }
+    
+    private fun initializeGuardManager() {
+        if (!::guardManager.isInitialized) {
+            guardManager = GuardManager(this) { gesture, callback ->
+                dispatchGesture(gesture, callback, null)
+            }
+            Log.d(TAG, "GuardService connected and initialized")
         }
-        
-        Log.d(TAG, "GuardService connected")
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null) return
+        
+        // If consent was pending, check if it's now given
+        if (consentPending) {
+            if (ConsentActivity.hasConsent(this)) {
+                consentPending = false
+                initializeGuardManager()
+            } else {
+                return // Still waiting for consent
+            }
+        }
+        
+        // Guard manager not initialized yet
+        if (!::guardManager.isInitialized) return
+        
         val pkg = event.packageName?.toString() ?: return
         if (pkg != YT_PKG) return
 
