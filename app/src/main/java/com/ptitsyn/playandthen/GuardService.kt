@@ -2,14 +2,8 @@ package com.ptitsyn.playandthen
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
-import android.content.Context
-import android.graphics.Path
-import android.graphics.Point
-import android.hardware.display.DisplayManager
-import android.os.Handler
-import android.os.Looper
+import android.content.Intent
 import android.util.Log
-import android.view.Display
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 
@@ -31,7 +25,15 @@ class GuardService : AccessibilityService() {
         
         // Check if user has given consent
         if (!ConsentActivity.hasConsent(this)) {
-            Log.w(TAG, "Accessibility service enabled but consent not given. Disabling self.")
+            Log.w(TAG, "Accessibility service enabled but consent not given. Launching consent screen.")
+            
+            // Launch consent activity
+            val intent = Intent(this, ConsentActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            startActivity(intent)
+            
+            // Disable service until consent is given
             disableSelf()
             return
         }
