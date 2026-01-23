@@ -118,6 +118,65 @@ Without these recordings, the games will not have audio instructions or feedback
 ./gradlew test
 ```
 
+### Browser Testing (TypeScript Games)
+
+TS games can be tested in a browser without building the Android app:
+
+```bash
+# Open test harness in browser
+open app/src/main/assets/games/test-harness.html
+```
+
+The test harness provides:
+- Game picker dropdown
+- Round configuration
+- Event log panel
+- Mock Android bridge (simulates `window.Android.onGameCompleted()`)
+
+### Debug Button (Debug Builds Only)
+
+Debug builds include a floating debug button (🎮) in the top-right corner:
+
+1. Build and install debug APK: `./gradlew installDebug`
+2. Open the app and grant overlay permission
+3. A floating 🎮 button appears
+4. Tap to show game picker:
+   - Numbers (Kotlin)
+   - Alphabet (Kotlin)
+   - Balloons (Kotlin)
+   - Numbers (TS)
+5. Select a game to launch it immediately (single round)
+
+The debug button is **not included** in release builds.
+
+### TypeScript Game Development
+
+```bash
+# Navigate to game folder
+cd app/src/main/assets/games/numbers
+
+# Install dependencies
+npm install
+
+# Build bundle
+npm run build
+
+# Test in browser
+open dist/index.html
+```
+
+**Android Bridge Interface:**
+```typescript
+// Called by Android to initialize game
+window.initGame({ currentRound: 1, totalRounds: 3 });
+
+// Called by Android to reset game
+window.resetGame();
+
+// Call this when game is completed
+window.Android.onGameCompleted();
+```
+
 
 ## Author
 

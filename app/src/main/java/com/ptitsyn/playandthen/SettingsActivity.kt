@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.TextView
@@ -25,6 +26,10 @@ class SettingsActivity : AppCompatActivity() {
         const val KEY_TIME_WINDOW_MINUTES = "skip_time_window_minutes"
         const val KEY_LANGUAGE_THRESHOLD = "language_violation_threshold"
         const val KEY_GAME_OVERLAY_INTERVAL = "game_overlay_interval_minutes"
+        const val KEY_GAME_NUMBERS_ENABLED = "game_numbers_enabled"
+        const val KEY_GAME_ALPHABET_ENABLED = "game_alphabet_enabled"
+        const val KEY_GAME_MATCH_WORDS_ENABLED = "game_match_words_enabled"
+        const val KEY_GAME_BALLOONS_ENABLED = "game_balloons_enabled"
         
         // Default values
         const val DEFAULT_MAX_SKIPS = 5
@@ -49,6 +54,10 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var languageThresholdSeekBar: SeekBar
     private lateinit var languageThresholdValue: TextView
     private lateinit var gameOverlayInput: EditText
+    private lateinit var gameNumbersCheckbox: CheckBox
+    private lateinit var gameAlphabetCheckbox: CheckBox
+    private lateinit var gameMatchWordsCheckbox: CheckBox
+    private lateinit var gameBalloonsCheckbox: CheckBox
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +80,10 @@ class SettingsActivity : AppCompatActivity() {
         languageThresholdSeekBar = findViewById(R.id.languageThresholdSeekBar)
         languageThresholdValue = findViewById(R.id.languageThresholdValue)
         gameOverlayInput = findViewById(R.id.gameOverlayInput)
+        gameNumbersCheckbox = findViewById(R.id.gameNumbersCheckbox)
+        gameAlphabetCheckbox = findViewById(R.id.gameAlphabetCheckbox)
+        gameMatchWordsCheckbox = findViewById(R.id.gameMatchWordsCheckbox)
+        gameBalloonsCheckbox = findViewById(R.id.gameBalloonsCheckbox)
     }
     
     private fun setupListeners() {
@@ -135,6 +148,32 @@ class SettingsActivity : AppCompatActivity() {
                 }
             }
         })
+        
+        // Game checkboxes - enforce at least one enabled
+        val gameCheckboxListener = { checkbox: CheckBox, key: String, isChecked: Boolean ->
+            val otherGamesEnabled = listOf(
+                gameNumbersCheckbox, gameAlphabetCheckbox, gameMatchWordsCheckbox, gameBalloonsCheckbox
+            ).filter { it != checkbox }.any { it.isChecked }
+            
+            if (!isChecked && !otherGamesEnabled) {
+                checkbox.isChecked = true // Prevent unchecking last game
+            } else {
+                prefs.edit().putBoolean(key, isChecked).apply()
+            }
+        }
+        
+        gameNumbersCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            gameCheckboxListener(gameNumbersCheckbox, KEY_GAME_NUMBERS_ENABLED, isChecked)
+        }
+        gameAlphabetCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            gameCheckboxListener(gameAlphabetCheckbox, KEY_GAME_ALPHABET_ENABLED, isChecked)
+        }
+        gameMatchWordsCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            gameCheckboxListener(gameMatchWordsCheckbox, KEY_GAME_MATCH_WORDS_ENABLED, isChecked)
+        }
+        gameBalloonsCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            gameCheckboxListener(gameBalloonsCheckbox, KEY_GAME_BALLOONS_ENABLED, isChecked)
+        }
     }
     
     private fun loadCurrentSettings() {
@@ -155,6 +194,21 @@ class SettingsActivity : AppCompatActivity() {
         // Load game overlay interval (1-120 minutes, default 15)
         val gameOverlayInterval = prefs.getLong(KEY_GAME_OVERLAY_INTERVAL, DEFAULT_GAME_OVERLAY_INTERVAL)
         gameOverlayInput.setText(gameOverlayInterval.toString())
+        
+        // Load game enabled states (all enabled by default)
+        gameNumbersCheckbox.isChecked = prefs.getBoolean(KEY_GAME_NUMBERS_ENABLED, true)
+        gameAlphabetCheckbox.isChecked = prefs.getBoolean(KEY_GAME_ALPHABET_ENABLED, true)
+        gameMatchWordsCheckbox.isChecked = prefs.getBoolean(KEY_GAME_MATCH_WORDS_ENABLED, true)
+        gameBalloonsCheckbox.isChecked = prefs.getBoolean(KEY_GAME_BALLOONS_ENABLED, true)
+    }
+    
+    private fun countEnabledGames(): Int {
+        var count = 0
+        if (gameNumbersCheckbox.isChecked) count++
+        if (gameAlphabetCheckbox.isChecked) count++
+        if (gameMatchWordsCheckbox.isChecked) count++
+        if (gameBalloonsCheckbox.isChecked) count++
+        return count
     }
     
     override fun onSupportNavigateUp(): Boolean {

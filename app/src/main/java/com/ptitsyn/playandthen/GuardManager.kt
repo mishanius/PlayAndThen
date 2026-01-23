@@ -6,10 +6,12 @@ import android.content.Context
 import android.graphics.Path
 import android.graphics.Point
 import android.hardware.display.DisplayManager
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.Display
+import android.view.WindowManager
 import android.view.accessibility.AccessibilityNodeInfo
 import java.text.SimpleDateFormat
 import java.util.*
@@ -58,6 +60,12 @@ class GuardManager(
     private var currentVideoStartTime: Long = 0
     private var wasAutoSkipped = false
     private var lastDailyResetDate: String = "" // Format: "yyyy-MM-dd"
+    
+    // Watch time tracking for multi-round games
+    private var accumulatedWatchTimeMs: Long = 0
+    private var lastWatchingUpdateTime: Long = 0
+    private val MAX_GAP_BETWEEN_UPDATES_MS =  1 * 60 * 60 * 1000L // 1 hour
+    private val MAX_GAP_BETWEEN_UPDATES_NON_WATCHING_MS =  10 * 60 * 1000L // 10 minutes
 
     /**
      * Gets configuration values from SharedPreferences with defaults.
@@ -285,21 +293,70 @@ class GuardManager(
     }
     
     /**
-     * Determines if game overlay should be shown based on timing logic.
+     * Updates accumulated watch time when user is actively watching.
+     * Resets if gap between updates exceeds 2 hours.
      */
-    private fun shouldShowGameOverlay(): Boolean {
-        if (wasAutoSkipped) {
-            Log.d(TAG, "shouldShowGameOverlay(): false - video was auto-skipped")
-            return false
+    private fun updateWatchTime() {
+        val now = System.currentTimeMillis()
+        if (!isCurrentlyWatching()) {
+            if(now - lastWatchingUpdateTime > MAX_GAP_BETWEEN_UPDATES_NON_WATCHING_MS){
+                accumulatedWatchTimeMs = 0;
+            }
+            return // Do nothing when not watching
         }
         
-        val now = System.currentTimeMillis()
-        val timeSinceLastOverlay = now - lastGameOverlayTime
-        val overlayInterval = getGameOverlayIntervalMinutes() * 60 * 1000L
+
         
-        val shouldShow = timeSinceLastOverlay >= overlayInterval
-        Log.d(TAG, "shouldShowGameOverlay(): $shouldShow - ${timeSinceLastOverlay / 1000}s since last overlay")
-        return shouldShow
+        if (lastWatchingUpdateTime > 0) {
+            val timeSinceLastUpdate = now - lastWatchingUpdateTime
+            
+            if (timeSinceLastUpdate > MAX_GAP_BETWEEN_UPDATES_MS) {
+                // Too long since last update - reset
+                Log.d(TAG, "Gap too large (${timeSinceLastUpdate/1000}s), resetting watch time")
+                accumulatedWatchTimeMs = 0
+            } else {
+                // Normal update - accumulate time
+                accumulatedWatchTimeMs += timeSinceLastUpdate
+                Log.d(TAG, "Accumulated +${timeSinceLastUpdate/1000}s, total: ${accumulatedWatchTimeMs/1000}s")
+            }
+        }
+        
+        lastWatchingUpdateTime = now
+    }
+    
+    /**
+     * Calculates number of game rounds based on accumulated watch time.
+     * Returns a value between 1 and 5 rounds.
+     */
+    private fun calculateNumberOfRounds(): Int {
+        val watchTimeMinutes = accumulatedWatchTimeMs / (60 * 1000L)
+        val intervalMinutes = getGameOverlayIntervalMinutes()
+        val rounds = (watchTimeMinutes / intervalMinutes).toInt()
+        return rounds.coerceIn(1, 5)
+    }
+    
+    /**
+     * Determines if game overlay should be shown based on accumulated watch time.
+     * Returns GameParams with calculated number of rounds, or null if games shouldn't be shown.
+     */
+    private fun shouldShowGameOverlay(): GameParams? {
+        if (wasAutoSkipped) {
+            Log.d(TAG, "shouldShowGameOverlay(): null - video was auto-skipped")
+            return null
+        }
+        
+        val watchTimeMinutes = accumulatedWatchTimeMs / (60 * 1000L)
+        val overlayInterval = getGameOverlayIntervalMinutes()
+        
+        if (watchTimeMinutes < overlayInterval) {
+            Log.d(TAG, "shouldShowGameOverlay(): null - insufficient watch time (${watchTimeMinutes}m < ${overlayInterval}m)")
+            return null
+        }
+        
+        val numberOfRounds = calculateNumberOfRounds()
+        Log.d(TAG, "shouldShowGameOverlay(): GameParams(rounds=$numberOfRounds) - watch time: ${watchTimeMinutes}m")
+        
+        return GameParams(numberOfRounds)
     }
     
     /**
@@ -356,6 +413,9 @@ class GuardManager(
     private fun analyzeCurrentState() {
         val root = currentRoot ?: return
         
+        // Update watch time tracking
+        updateWatchTime()
+        
         // Detect current player state
         val detectedState = detectPlayerState(root)
         
@@ -405,13 +465,15 @@ class GuardManager(
                             Log.d(TAG, "Language compliance: COMPLIANT - Title '$detectedTitle' is in allowed language '$detectedLanguage'")
                             
                             // Show game overlay if timing allows and not auto-skipped
-                            if (shouldShowGameOverlay()) {
-                                Log.d(TAG, "Triggering game overlay for compliant video: '$detectedTitle'")
+                            val gameParams = shouldShowGameOverlay()
+                            if (gameParams != null) {
+                                Log.d(TAG, "Triggering game overlay with ${gameParams.numberOfRounds} rounds for compliant video: '$detectedTitle'")
                                 pauseVideo()
-                                GameOverlayService.startGameOverlay(context)
+                                GameOverlayService.startGameOverlay(context, gameParams)
                                 lastGameOverlayTime = System.currentTimeMillis()
+                                accumulatedWatchTimeMs = 0 // Reset watch time after showing games
                             } else {
-                                Log.d(TAG, "Skipping game overlay due to timing restrictions")
+                                Log.d(TAG, "Skipping game overlay - insufficient watch time or auto-skipped")
                             }
                             
                         } else {

@@ -1,0 +1,14 @@
+{
+  "name": "logic-add-game",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "webpack --mode production",
+    "watch": "webpack --mode development --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "webpack": "^5.88.0",
+    "webpack-cli": "^5.1.0",
+    "ts-loader": "^9.4.0"
+  }
+}

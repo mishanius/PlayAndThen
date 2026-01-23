@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlayAndThen Game</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Huge text display (optional, for some games) -->
+        <div id="huge-text"></div>
+
+        <!-- Speaker button -->
+        <div id="speaker-button-container">
+            <button id="speaker-button" class="speaker-button">
+                🔊
+            </button>
+        </div>
+
+        <!-- Main game area with grid and character side by side -->
+        <div id="main-game-area">
+            <!-- Grid of 6 cells (2 rows × 3 columns) -->
+            <div id="grid-container">
+                <div class="cell cell-default" data-index="0"></div>
+                <div class="cell cell-default" data-index="1"></div>
+                <div class="cell cell-default" data-index="2"></div>
+                <div class="cell cell-default" data-index="3"></div>
+                <div class="cell cell-default" data-index="4"></div>
+                <div class="cell cell-default" data-index="5"></div>
+            </div>
+
+            <!-- Character image (decorative) -->
+            <div id="character-container">
+                <img id="character" src="../father.png" alt="Character">
+            </div>
+        </div>
+    </div>
+
+    <!-- Load the compiled TypeScript bundle -->
+    <script src="bundle.js"></script>
+</body>
+</html>

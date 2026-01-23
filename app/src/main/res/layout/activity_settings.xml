@@ -191,6 +191,66 @@
             android:textSize="16sp"
             android:layout_marginBottom="24dp"/>
 
+        <!-- Games Selection Section -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enabled Games"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select which games can appear during play sessions"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginBottom="12dp"/>
+
+        <CheckBox
+            android:id="@+id/gameNumbersCheckbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Numbers (find the number)"
+            android:textSize="16sp"
+            android:checked="true"
+            android:layout_marginBottom="8dp"/>
+
+        <CheckBox
+            android:id="@+id/gameAlphabetCheckbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Alphabet (א ב ג)"
+            android:textSize="16sp"
+            android:checked="true"
+            android:layout_marginBottom="8dp"/>
+
+        <CheckBox
+            android:id="@+id/gameMatchWordsCheckbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Match Words (animal → home)"
+            android:textSize="16sp"
+            android:checked="true"
+            android:layout_marginBottom="8dp"/>
+
+        <CheckBox
+            android:id="@+id/gameBalloonsCheckbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Balloons (pop the balloons)"
+            android:textSize="16sp"
+            android:checked="true"
+            android:layout_marginBottom="24dp"/>
+
         <!-- Info Section -->
         <View
             android:layout_width="match_parent"

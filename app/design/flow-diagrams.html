@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlayAndThen - Program Flow Diagrams</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+        
+        .diagram-section {
+            margin: 40px 0;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 5px solid #667eea;
+        }
+        
+        h2 {
+            color: #764ba2;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .description {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
+            line-height: 1.6;
+        }
+        
+        .mermaid {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .feature-list {
+            background: white;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        
+        .feature-list ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .toc {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .toc h3 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        
+        .toc ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        
+        .toc a {
+            color: #764ba2;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .toc a:hover {
+            color: #667eea;
+            text-decoration: underline;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            color: #666;
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 PlayAndThen</h1>
+        <div class="subtitle">Program Flow & Architecture Diagrams</div>
+        
+        <div class="toc">
+            <h3>📋 Table of Contents</h3>
+            <ul>
+                <li><a href="#overview">System Overview</a></li>
+                <li><a href="#main-flow">Main Application Flow</a></li>
+                <li><a href="#guard-service">GuardService Monitoring Flow</a></li>
+                <li><a href="#language-detection">Language Detection & Action Flow</a></li>
+                <li><a href="#game-overlay">Game Overlay Flow</a></li>
+                <li><a href="#rate-limiting">Rate Limiting Flow</a></li>
+                <li><a href="#watch-time">Watch Time Tracking Flow</a></li>
+                <li><a href="#architecture">Component Architecture</a></li>
+                <li><a href="#state-machine">Player State Machine</a></li>
+            </ul>
+        </div>
+
+        <!-- System Overview -->
+        <div class="diagram-section" id="overview">
+            <h2>🏗️ System Overview</h2>
+            <div class="description">
+                <strong>PlayAndThen</strong> is an Android parental control app that monitors YouTube Kids activity through accessibility services. It displays educational games before videos play while enforcing language policies and viewing limits.
+            </div>
+            <div class="feature-list">
+                <strong>Key Features:</strong>
+                <ul>
+                    <li>Real-time YouTube Kids monitoring via Accessibility Service</li>
+                    <li>Three educational game types (Numbers, Hebrew Alphabet, Balloons)</li>
+                    <li>ML-powered language detection (English, Hebrew, Russian)</li>
+                    <li>Smart rate limiting to prevent excessive skipping</li>
+                    <li>Watch time tracking for multi-round games</li>
+                    <li>Configurable parental controls</li>
+                </ul>
+            </div>
+            <div class="mermaid">
+graph TB
+    subgraph "PlayAndThen App"
+        A[MainActivity<br/>Permissions & Testing]
+        B[SettingsActivity<br/>Configuration]
+        C[GameOverlayService<br/>Game Display]
+        D[GuardService<br/>Accessibility Monitor]
+        E[GuardManager<br/>Core Logic Engine]
+        F[MatchingEngine<br/>Tree Analysis]
+        G[LanguageDetectionUtil<br/>ML Kit Integration]
+        H[ButtonExtractor<br/>UI Interaction]
+    end
+    
+    I[YouTube Kids App]
+    
+    I -->|Accessibility Events| D
+    D --> E
+    E --> F
+    E --> G
+    E --> H
+    E -->|Trigger Games| C
+    A -->|Configure| B
+    A -->|Test| C
+    
+    style A fill:#e1f5ff
+    style B fill:#e1f5ff
+    style C fill:#fff3e0
+    style D fill:#f3e5f5
+    style E fill:#f3e5f5
+    style F fill:#e8f5e9
+    style G fill:#e8f5e9
+    style H fill:#e8f5e9
+    style I fill:#ffebee
+            </div>
+        </div>
+
+        <!-- Main Application Flow -->
+        <div class="diagram-section" id="main-flow">
+            <h2>📱 Main Application Flow</h2>
+            <div class="description">
+                The main application flow handles permission requests, settings configuration, and game testing. Users must grant overlay permission and enable the accessibility service before the app can function.
+            </div>
+            <div class="mermaid">
+graph TD
+    A[App Launch] --> B[MainActivity]
+    B --> C{Overlay<br/>Permission?}
+    C -->|No| D[Request Permission]
+    C -->|Yes| E[Show Ready Message]
+    D --> F[Settings.ACTION_MANAGE_<br/>OVERLAY_PERMISSION]
+    F --> C
+    E --> G[Enable Test Button]
+    
+    B --> H[Settings Button]
+    H --> I[SettingsActivity]
+    I --> J[Configure Parameters:<br/>- Max Skips<br/>- Time Window<br/>- Language Threshold<br/>- Game Interval]
+    J --> K[Save to<br/>SharedPreferences]
+    
+    G --> L[Test Overlay Button]
+    L --> M[Start GameOverlayService]
+    M --> N[Display Game]
+    
+    style A fill:#e1f5ff
+    style B fill:#e1f5ff
+    style E fill:#c8e6c9
+    style G fill:#c8e6c9
+    style I fill:#fff9c4
+    style N fill:#ffccbc
+            </div>
+        </div>
+
+        <!-- GuardService Monitoring Flow -->
+        <div class="diagram-section" id="guard-service">
+            <h2>👁️ GuardService Monitoring Flow</h2>
+            <div class="description">
+                GuardService continuously monitors YouTube Kids accessibility events, detecting player state changes and extracting video information. It uses debouncing to handle the high volume of events efficiently.
+            </div>
+            <div class="mermaid">
+graph TD
+    A[YouTube Kids Event] --> B{Package =<br/>YouTube Kids?}
+    B -->|No| Z[Ignore]
+    B -->|Yes| C{Relevant<br/>Event Type?}
+    C -->|No| Z
+    C -->|Yes| D{Debounce<br/>Check<br/>5ms}
+    D -->|Too Soon| Z
+    D -->|OK| E[Get Root Node]
+    E --> F[GuardManager.<br/>updateRoot]
+    
+    F --> G[analyzeCurrentState]
+    G --> H[detectPlayerState]
+    H --> I[MatchingEngine.<br/>walkTreeAndMatch]
+    I --> J{State<br/>Changed?}
+    
+    J -->|Yes| K[handleStateChange]
+    J -->|No| L[handleSameState]
+    
+    K --> M{New State?}
+    M -->|FULL_SCREEN_WITH_<br/>RECOMMENDATIONS| N[Extract Title]
+    M -->|FULL_SCREEN_<br/>STRICT| O[Schedule<br/>clickMiddle<br/>3s delay]
+    M -->|Other| P[Update State]
+    
+    L --> Q{Still FULL_<br/>SCREEN_STRICT?}
+    Q -->|Yes| O
+    Q -->|No| P
+    
+    N --> R{Title<br/>Changed?}
+    R -->|Yes| S[Increment<br/>Video Count]
+    S --> T[Language<br/>Detection]
+    R -->|No| P
+    
+    style A fill:#e3f2fd
+    style E fill:#f3e5f5
+    style G fill:#fff3e0
+    style N fill:#c8e6c9
+    style T fill:#ffccbc
+            </div>
+        </div>
+
+        <!-- Language Detection & Action Flow -->
+        <div class="diagram-section" id="language-detection">
+            <h2>🌐 Language Detection & Action Flow</h2>
+            <div class="description">
+                When a new video is detected, the app extracts its title and uses Google ML Kit to identify the language. Based on compliance with allowed languages (English, Hebrew, Russian), it either shows educational games or skips the video.
+            </div>
+            <div class="mermaid">
+graph TD
+    A[New Video Title] --> B[LanguageDetectionUtil.<br/>detectAndValidateLanguage]
+    B --> C[ML Kit Language<br/>Identification<br/>Confidence: 50%]
+    C --> D{Language<br/>Detected?}
+    
+    D -->|No/Undetermined| E[Increment<br/>Violation Count]
+    D -->|Yes| F{In Allowed<br/>Languages?<br/>en, he, ru}
+    
+    F -->|Yes - Compliant| G[Check Watch Time]
+    F -->|No - Non-Compliant| H{Can Skip?<br/>Rate Limit OK?}
+    
+    G --> I{Sufficient<br/>Watch Time?<br/>15+ min default}
+    I -->|Yes| J[Calculate Rounds<br/>1-5 based on<br/>watch time]
+    I -->|No| K[Continue Watching]
+    
+    J --> L[pauseVideo]
+    L --> M[Start<br/>GameOverlayService]
+    M --> N[Display Game Overlay]
+    N --> O[Reset Watch Time]
+    
+    H -->|Yes| P[skipVideo]
+    H -->|No| E
+    
+    P --> Q[Add to Skip History]
+    Q --> R[Schedule Delayed Skip<br/>2 second delay]
+    R --> S[nextVideo]
+    
+    E --> T{Threshold<br/>Reached?<br/>3 default}
+    T -->|Yes| U[hitBackButton]
+    T -->|No| V[Continue Monitoring]
+    
+    U --> W[Reset Violation Count]
+    
+    style C fill:#e1f5ff
+    style F fill:#fff3e0
+    style I fill:#fff3e0
+    style N fill:#c8e6c9
+    style P fill:#ffccbc
+    style U fill:#ffccbc
+            </div>
+        </div>
+
+        <!-- Game Overlay Flow -->
+        <div class="diagram-section" id="game-overlay">
+            <h2>🎮 Game Overlay Flow</h2>
+            <div class="description">
+                The GameOverlayService displays educational games as fullscreen overlays. It supports multi-round gameplay, randomly selecting from four game types. Each game requires correct answers before allowing video playback to continue.
+            </div>
+            <div class="mermaid">
+graph TD
+    A[GameOverlayService.<br/>startGameOverlay] --> B[Start Foreground<br/>Service]
+    B --> C[Create Notification]
+    C --> D[Initialize Round Counter<br/>currentRound = 0]
+    D --> E[showGameOverlay]
+    
+    E --> F[Check Overlay<br/>Permission]
+    F --> G[Create Fullscreen<br/>Container]
+    G --> H[selectNextGame<br/>Random 0-3]
+    
+    H --> I{Game Type?}
+    I -->|0| J[NumbersGame<br/>Find number 0-10]
+    I -->|1| K[BloonsGame<br/>Count balloons]
+    I -->|2| L[AlphabetGame<br/>Find Hebrew letter]
+    I -->|3| M[GridGameJs<br/>WebView game]
+    
+    J --> N[Populate 6 Cells<br/>with Numbers]
+    K --> O[Populate 6 Cells<br/>with Balloons]
+    L --> P[Populate 6 Cells<br/>with Hebrew Letters]
+    M --> Q[Load WebView Game]
+    
+    N --> R[Play Instructions<br/>Audio]
+    O --> R
+    P --> R
+    Q --> R
+    
+    R --> S[Wait for User Input]
+    S --> T{Correct<br/>Cell?}
+    
+    T -->|No| U[Play try_again.ogg]
+    U --> S
+    
+    T -->|Yes| V[Play well_done.ogg]
+    V --> W[onGameCompleted]
+    
+    W --> X{More<br/>Rounds?}
+    X -->|Yes| Y[transitionToNextRound<br/>currentRound++]
+    Y --> H
+    
+    X -->|No| Z[hideGameOverlay]
+    Z --> AA[Stop Service]
+    
+    style A fill:#e1f5ff
+    style J fill:#fff3e0
+    style K fill:#fff3e0
+    style L fill:#fff3e0
+    style M fill:#fff3e0
+    style V fill:#c8e6c9
+    style Z fill:#ffccbc
+            </div>
+        </div>
+
+        <!-- Rate Limiting Flow -->
+        <div class="diagram-section" id="rate-limiting">
+            <h2>⏱️ Rate Limiting Flow</h2>
+            <div class="description">
+                The rate limiting system prevents excessive video skipping by tracking skip timestamps within a configurable time window. This ensures children aren't frustrated by too many auto-skips while still enforcing content policies.
+            </div>
+            <div class="mermaid">
+graph TD
+    A[skipVideo Called] --> B[cleanOldSkipHistory]
+    B --> C[Remove Timestamps<br/>Outside Window<br/>10 min default]
+    C --> D{skipHistory.size<br/>< maxSkips?<br/>5 default}
+    
+    D -->|No| E[Log: Skip Blocked<br/>Rate Limit Reached]
+    E --> F[Return Without<br/>Skipping]
+    
+    D -->|Yes| G[Add Current<br/>Timestamp]
+    G --> H[Schedule Delayed Skip<br/>2 second delay]
+    H --> I[Wait for Video<br/>to Load]
+    I --> J[performDelayedSkip]
+    J --> K[nextVideo]
+    K --> L[Set wasAutoSkipped<br/>= true]
+    
+    L --> M[Video Skipped<br/>Successfully]
+    
+    F --> N[Increment Language<br/>Violation Count]
+    N --> O{Violation Count<br/>>= Threshold?<br/>3 default}
+    O -->|Yes| P[hitBackButton<br/>Return to Home]
+    O -->|No| Q[Continue Monitoring]
+    
+    style E fill:#ffccbc
+    style F fill:#ffccbc
+    style L fill:#c8e6c9
+    style M fill:#c8e6c9
+    style P fill:#ff9800
+            </div>
+        </div>
+
+        <!-- Watch Time Tracking Flow -->
+        <div class="diagram-section" id="watch-time">
+            <h2>⏰ Watch Time Tracking Flow</h2>
+            <div class="description">
+                Watch time tracking accumulates viewing duration to determine when to show games and how many rounds to play. It intelligently handles gaps in viewing and resets after extended periods of inactivity.
+            </div>
+            <div class="mermaid">
+graph TD
+    A[updateWatchTime<br/>Called] --> B{isCurrently<br/>Watching?}
+    B -->|No| C{Gap ><br/>10 minutes?}
+    C -->|Yes| D[Reset Watch Time<br/>to 0]
+    C -->|No| E[Keep Current Time]
+    
+    B -->|Yes| F{lastWatchingUpdateTime<br/>> 0?}
+    F -->|No| G[Set lastWatchingUpdateTime<br/>= now]
+    
+    F -->|Yes| H[Calculate Time<br/>Since Last Update]
+    H --> I{Gap ><br/>1 hour?}
+    
+    I -->|Yes| J[Reset Watch Time<br/>to 0]
+    I -->|No| K[Accumulate Time]
+    
+    K --> L[accumulatedWatchTimeMs<br/>+= gap]
+    L --> M[Update lastWatchingUpdateTime]
+    
+    M --> N[calculateNumberOfRounds]
+    N --> O[rounds = watchTimeMinutes<br/>/ intervalMinutes<br/>15 min default]
+    O --> P[Clamp to 1-5 rounds]
+    
+    P --> Q{Should Show<br/>Game Overlay?}
+    Q -->|Yes| R[Return GameParams<br/>with rounds]
+    Q -->|No| S[Return null]
+    
+    R --> T[Trigger Game<br/>Overlay]
+    
+    style B fill:#e1f5ff
+    style K fill:#c8e6c9
+    style L fill:#c8e6c9
+    style P fill:#fff3e0
+    style T fill:#ffccbc
+            </div>
+        </div>
+
+        <!-- Component Architecture -->
+        <div class="diagram-section" id="architecture">
+            <h2>🏛️ Component Architecture</h2>
+            <div class="description">
+                The app follows a layered architecture with clear separation of concerns. The GuardService handles accessibility events, GuardManager contains business logic, and specialized utilities handle specific tasks like language detection and UI interaction.
+            </div>
+            <div class="mermaid">
+graph TB
+    subgraph "Presentation Layer"
+        A[MainActivity]
+        B[SettingsActivity]
+        C[GameOverlayService]
+    end
+    
+    subgraph "Service Layer"
+        D[GuardService<br/>Accessibility]
+    end
+    
+    subgraph "Business Logic Layer"
+        E[GuardManager<br/>State Management]
+        F[MatchingEngine<br/>Tree Analysis]
+        G[LanguageDetectionUtil<br/>ML Kit]
+        H[ButtonExtractor<br/>UI Actions]
+        I[TitleExtractor<br/>Content Parsing]
+    end
+    
+    subgraph "Game Layer"
+        J[GridGame<br/>Base Class]
+        K[NumbersGame]
+        L[AlphabetGame]
+        M[BloonsGame]
+        N[GridGameJs]
+    end
+    
+    subgraph "Data Layer"
+        O[SharedPreferences<br/>Configuration]
+        P[PlayerState<br/>Enum]
+        Q[GameParams<br/>Data Class]
+    end
+    
+    A --> C
+    A --> B
+    B --> O
+    D --> E
+    E --> F
+    E --> G
+    E --> H
+    E --> I
+    E --> O
+    E --> C
+    C --> J
+    J --> K
+    J --> L
+    J --> M
+    C --> N
+    E --> P
+    C --> Q
+    
+    style A fill:#e1f5ff
+    style B fill:#e1f5ff
+    style C fill:#fff3e0
+    style D fill:#f3e5f5
+    style E fill:#f3e5f5
+    style F fill:#e8f5e9
+    style G fill:#e8f5e9
+    style H fill:#e8f5e9
+    style I fill:#e8f5e9
+    style J fill:#ffccbc
+    style K fill:#ffccbc
+    style L fill:#ffccbc
+    style M fill:#ffccbc
+    style N fill:#ffccbc
+    style O fill:#fff9c4
+    style P fill:#fff9c4
+    style Q fill:#fff9c4
+            </div>
+        </div>
+
+        <!-- Player State Machine -->
+        <div class="diagram-section" id="state-machine">
+            <h2>🔄 Player State Machine</h2>
+            <div class="description">
+                The app tracks four distinct player states in YouTube Kids. State transitions trigger different behaviors, such as scheduling center-screen taps for auto-play or extracting video titles for language detection.
+            </div>
+            <div class="mermaid">
+stateDiagram-v2
+    [*] --> NONE
+    
+    NONE --> MINI_PLAYER: Video minimized
+    NONE --> FULL_SCREEN_WITH_RECOMMENDATIONS: Video opened
+    
+    MINI_PLAYER --> FULL_SCREEN_WITH_RECOMMENDATIONS: Expand video
+    MINI_PLAYER --> NONE: Close video
+    
+    FULL_SCREEN_WITH_RECOMMENDATIONS --> FULL_SCREEN_STRICT: Auto-play starts
+    FULL_SCREEN_WITH_RECOMMENDATIONS --> MINI_PLAYER: Minimize video
+    FULL_SCREEN_WITH_RECOMMENDATIONS --> NONE: Exit video
+    
+    FULL_SCREEN_STRICT --> FULL_SCREEN_WITH_RECOMMENDATIONS: User interaction
+    FULL_SCREEN_STRICT --> FULL_SCREEN_STRICT: New video auto-plays
+    FULL_SCREEN_STRICT --> NONE: Exit video
+    
+    note right of NONE
+        Home/Browse screen
+        No video playing
+    end note
+    
+    note right of MINI_PLAYER
+        Video minimized
+        Thumbnail visible
+    end note
+    
+    note right of FULL_SCREEN_WITH_RECOMMENDATIONS
+        Video playing fullscreen
+        UI controls visible
+        Recommendations shown
+        Title extraction happens here
+    end note
+    
+    note right of FULL_SCREEN_STRICT
+        Video playing fullscreen
+        No UI controls
+        Auto-play mode
+        Center tap scheduled
+    end note
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>PlayAndThen</strong> - Educational Parental Control for YouTube Kids</p>
+            <p>Created by Mishanous | Version 1.0</p>
+            <p>Generated: <span id="date"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            themeVariables: {
+                primaryColor: '#667eea',
+                primaryTextColor: '#fff',
+                primaryBorderColor: '#764ba2',
+                lineColor: '#764ba2',
+                secondaryColor: '#e1f5ff',
+                tertiaryColor: '#fff3e0'
+            }
+        });
+        
+        // Set current date
+        document.getElementById('date').textContent = new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    </script>
+</body>
+</html>

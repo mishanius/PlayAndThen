@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlayAndThen Game - Debug Mode</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        body {
+            background: #f0f0f0 !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            overflow: visible !important;
+            overflow-x: hidden !important;
+            height: auto !important;
+            min-height: 100vh !important;
+        }
+
+        /* Debug Dashboard Styles */
+        #debug-dashboard {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1000;
+            transition: max-height 0.3s ease;
+            overflow: hidden;
+        }
+
+        #debug-dashboard.collapsed {
+            max-height: 60px;
+        }
+
+        #debug-dashboard.expanded {
+            max-height: 1000px;
+        }
+
+        #debug-dashboard h2 {
+            margin: 0 0 15px 0;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        #debug-dashboard h2::before {
+            content: '▼';
+            transition: transform 0.3s ease;
+        }
+
+        #debug-dashboard.collapsed h2::before {
+            transform: rotate(-90deg);
+        }
+
+        .dashboard-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .dashboard-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .dashboard-section h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .control-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .control-group input[type="number"] {
+            width: 70px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            color: #667eea;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #FF9800;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .status-display {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+            font-size: 14px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-indicator.active {
+            background: #4CAF50;
+            box-shadow: 0 0 10px #4CAF50;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.inactive {
+            background: #f44336;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .log-display {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        #game-container {
+            background: white;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .control-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .status-display {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .status-item {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Debug Dashboard -->
+    <div id="debug-dashboard" class="collapsed">
+        <h2 id="dashboard-toggle">🎮 Game Debug Dashboard (Click to expand)</h2>
+        
+        <!-- Configuration Section -->
+        <div class="dashboard-section">
+            <h3>Configuration</h3>
+            <div class="control-group">
+                <label>
+                    Game Type:
+                    <select id="game-type-select" style="padding: 8px 12px; border-radius: 4px; font-size: 14px;">
+                        <option value="numbers">Numbers Game</option>
+                        <option value="match-words">Match Words Game</option>
+                    </select>
+                </label>
+                <label>
+                    Current Round:
+                    <input type="number" id="current-round-input" min="1" value="1">
+                </label>
+                <label>
+                    Total Rounds:
+                    <input type="number" id="total-rounds-input" min="1" value="5">
+                </label>
+                <button class="btn btn-primary" id="start-game-btn">Start Game</button>
+                <button class="btn btn-secondary" id="reset-btn">Reset to Round 1</button>
+            </div>
+        </div>
+
+        <!-- Status Section -->
+        <div class="dashboard-section">
+            <h3>Status</h3>
+            <div class="status-display">
+                <div class="status-item">
+                    <span class="status-indicator" id="status-indicator"></span>
+                    <span id="status-text">Not Started</span>
+                </div>
+                <div class="status-item">
+                    <span>📊</span>
+                    <span id="progress-text">Round 1/5</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Log Section -->
+        <div class="dashboard-section">
+            <h3>Last Action</h3>
+            <div class="log-display" id="action-log">
+                Waiting for game to start...
+            </div>
+        </div>
+
+        <!-- Quick Actions Section -->
+        <div class="dashboard-section">
+            <h3>Quick Actions</h3>
+            <div class="control-group">
+                <button class="btn" id="play-sound-btn">🔊 Play Target Sound</button>
+                <button class="btn" id="reset-round-btn">🔄 Reset Current Round</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game content will be loaded dynamically here -->
+    <div id="game-content-wrapper"></div>
+
+    <!-- Debug Dashboard Logic -->
+    <script>
+        // Game state tracking
+        let currentGameConfig = {
+            currentRound: 1,
+            totalRounds: 5
+        };
+        let currentGameType = 'numbers';
+        let gameActive = false;
+
+        // DOM elements
+        const gameTypeSelect = document.getElementById('game-type-select');
+        const currentRoundInput = document.getElementById('current-round-input');
+        const totalRoundsInput = document.getElementById('total-rounds-input');
+        const startGameBtn = document.getElementById('start-game-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const playSoundBtn = document.getElementById('play-sound-btn');
+        const resetRoundBtn = document.getElementById('reset-round-btn');
+        const statusIndicator = document.getElementById('status-indicator');
+        const statusText = document.getElementById('status-text');
+        const progressText = document.getElementById('progress-text');
+        const actionLog = document.getElementById('action-log');
+        const gameWrapper = document.getElementById('game-content-wrapper');
+
+        // Load game HTML dynamically
+        fetch('dist/index.html')
+            .then(response => response.text())
+            .then(html => {
+                // Extract body content from dist/index.html
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const bodyContent = doc.body.innerHTML;
+                
+                // Inject the game content
+                gameWrapper.innerHTML = bodyContent;
+                
+                // Load the game's stylesheet
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = 'styles.css';
+                document.head.appendChild(link);
+                
+                // Load the game's JavaScript
+                const script = document.createElement('script');
+                script.src = 'dist/bundle.js';
+                script.onload = () => {
+                    logAction('📱 Game loaded successfully');
+                    
+                    // Setup mock Android interface
+                    window.Android = {
+                        onGameCompleted: function() {
+                            logAction('✅ Game round completed!');
+                            console.log('Game completed - Round:', currentGameConfig.currentRound);
+                            
+                            // Update status
+                            updateStatus(false);
+                            
+                            // Auto-advance to next round if available
+                            if (currentGameConfig.currentRound < currentGameConfig.totalRounds) {
+                                setTimeout(() => {
+                                    currentGameConfig.currentRound++;
+                                    currentRoundInput.value = currentGameConfig.currentRound;
+                                    logAction(`⏭️ Auto-advancing to round ${currentGameConfig.currentRound}`);
+                                    startGame();
+                                }, 2000);
+                            } else {
+                                logAction('🎊 All rounds completed!');
+                            }
+                        }
+                    };
+                    
+                    // Auto-start game
+                    setTimeout(() => startGame(), 500);
+                };
+                document.body.appendChild(script);
+            })
+            .catch(error => {
+                gameWrapper.innerHTML = '<div style="color: red; padding: 20px;">Error loading game: ' + error + '</div>';
+            });
+
+        // Update status display
+        function updateStatus(active) {
+            gameActive = active;
+            statusIndicator.className = 'status-indicator ' + (active ? 'active' : 'inactive');
+            statusText.textContent = active ? 'Active' : 'Inactive';
+            progressText.textContent = `Round ${currentGameConfig.currentRound}/${currentGameConfig.totalRounds}`;
+        }
+
+        // Log action to dashboard
+        function logAction(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            actionLog.textContent = `[${timestamp}] ${message}`;
+            console.log(message);
+        }
+
+        // Start game with current configuration
+        function startGame() {
+            const currentRound = parseInt(currentRoundInput.value) || 1;
+            const totalRounds = parseInt(totalRoundsInput.value) || 5;
+            currentGameType = gameTypeSelect.value;
+            
+            // Validate inputs
+            if (currentRound < 1) currentRoundInput.value = 1;
+            if (totalRounds < 1) totalRoundsInput.value = 1;
+            if (currentRound > totalRounds) {
+                logAction('❌ Current round cannot be greater than total rounds');
+                return;
+            }
+
+            currentGameConfig = {
+                currentRound: parseInt(currentRoundInput.value),
+                totalRounds: parseInt(totalRoundsInput.value)
+            };
+
+            logAction(`🎮 Starting ${currentGameType} game - Round ${currentGameConfig.currentRound}/${currentGameConfig.totalRounds}`);
+            updateStatus(true);
+
+            // Initialize game with type
+            if (window.initGame) {
+                window.initGame(currentGameConfig, currentGameType);
+            } else {
+                logAction('❌ Error: Game not loaded yet');
+            }
+        }
+
+        // Reset to round 1
+        function resetToRound1() {
+            currentRoundInput.value = 1;
+            currentGameConfig.currentRound = 1;
+            logAction('🔄 Reset to round 1');
+            startGame();
+        }
+
+        // Play target sound
+        function playTargetSound() {
+            if (gameActive) {
+                logAction('🔊 Playing target sound');
+                const speakerBtn = document.getElementById('speaker-button');
+                if (speakerBtn) speakerBtn.click();
+            } else {
+                logAction('⚠️ Game must be active to play sound');
+            }
+        }
+
+        // Reset current round
+        function resetCurrentRound() {
+            if (window.resetGame) {
+                logAction(`🔄 Resetting current round ${currentGameConfig.currentRound}`);
+                window.resetGame();
+                updateStatus(true);
+            } else {
+                logAction('❌ Error: Reset function not available');
+            }
+        }
+
+        // Toggle dashboard visibility
+        const dashboard = document.getElementById('debug-dashboard');
+        const dashboardToggle = document.getElementById('dashboard-toggle');
+        
+        dashboardToggle.addEventListener('click', () => {
+            dashboard.classList.toggle('collapsed');
+            dashboard.classList.toggle('expanded');
+        });
+
+        // Event listeners
+        startGameBtn.addEventListener('click', startGame);
+        resetBtn.addEventListener('click', resetToRound1);
+        playSoundBtn.addEventListener('click', playTargetSound);
+        resetRoundBtn.addEventListener('click', resetCurrentRound);
+
+        // Allow Enter key to start game
+        currentRoundInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') startGame();
+        });
+        totalRoundsInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') startGame();
+        });
+    </script>
+</body>
+</html>

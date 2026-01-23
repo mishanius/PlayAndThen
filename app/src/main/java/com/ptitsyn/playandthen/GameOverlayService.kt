@@ -35,6 +35,8 @@ class GameOverlayService : Service() {
         const val GAME_TYPE_BALLOONS_KT = "balloons_kt"
         const val GAME_TYPE_NUMBERS_TS = "numbers_ts"
         const val GAME_TYPE_MATCH_WORDS_TS = "match_words_ts"
+        const val GAME_TYPE_OPPOSITES_TS = "opposites_ts"
+        const val GAME_TYPE_ALPHABET_TS = "alphabet_ts"
         
         fun startGameOverlay(context: Context, gameParams: GameParams) {
             val intent = Intent(context, GameOverlayService::class.java).apply {
@@ -264,6 +266,34 @@ class GameOverlayService : Service() {
                     }
                 }
             }
+            5 -> {
+                Log.d(TAG, "Selected OppositesGame (JS/TS) (round $currentRound/$numberOfRounds)")
+                GridGameJs(
+                    context = this,
+                    currentRound = currentRound,
+                    totalRounds = numberOfRounds,
+                    gameType = "opposites"
+                ).also { game ->
+                    game.onGameCompleted = {
+                        Log.d(TAG, "Round $currentRound/$numberOfRounds completed")
+                        onRoundCompleted()
+                    }
+                }
+            }
+            6 -> {
+                Log.d(TAG, "Selected AlphabetGame (JS/TS) (round $currentRound/$numberOfRounds)")
+                GridGameJs(
+                    context = this,
+                    currentRound = currentRound,
+                    totalRounds = numberOfRounds,
+                    gameType = "alphabet"
+                ).also { game ->
+                    game.onGameCompleted = {
+                        Log.d(TAG, "Round $currentRound/$numberOfRounds completed")
+                        onRoundCompleted()
+                    }
+                }
+            }
             else -> {
                 Log.d(TAG, "Selected NumbersGame (Kotlin fallback) (round $currentRound/$numberOfRounds)")
                 NumbersGame(this).also { game ->
@@ -305,12 +335,10 @@ class GameOverlayService : Service() {
     }
 
     /**
-     * Selects a random game (0-4) or returns forced game type.
-     * 0 = NumbersGame (Kotlin)
-     * 1 = BloonsGame (Kotlin)
-     * 2 = AlphabetGame (Kotlin)
+     * Selects a random game from enabled games or returns forced game type.
      * 3 = NumbersGameTS (JavaScript/TypeScript)
      * 4 = MatchWordsGame (JavaScript/TypeScript)
+     * 6 = AlphabetGame (JavaScript/TypeScript)
      */
     private fun selectNextGame(): Int {
         // If forced game type is set, use it
@@ -321,11 +349,30 @@ class GameOverlayService : Service() {
                 GAME_TYPE_ALPHABET_KT -> 2
                 GAME_TYPE_NUMBERS_TS -> 3
                 GAME_TYPE_MATCH_WORDS_TS -> 4
+                GAME_TYPE_OPPOSITES_TS -> 5
+                GAME_TYPE_ALPHABET_TS -> 6
                 else -> 3
             }
         }
         
-        return 3;//(0..4).random()
+        // Get enabled games from settings
+        val prefs = SettingsActivity.getPreferences(this)
+        val enabledGames = mutableListOf<Int>()
+        
+        if (prefs.getBoolean(SettingsActivity.KEY_GAME_NUMBERS_ENABLED, true)) {
+            enabledGames.add(3) // Numbers TS
+        }
+        if (prefs.getBoolean(SettingsActivity.KEY_GAME_ALPHABET_ENABLED, true)) {
+            enabledGames.add(6) // Alphabet TS
+        }
+        if (prefs.getBoolean(SettingsActivity.KEY_GAME_MATCH_WORDS_ENABLED, true)) {
+            enabledGames.add(4) // Match Words TS
+        }
+        if (prefs.getBoolean(SettingsActivity.KEY_GAME_BALLOONS_ENABLED, true)) {
+            enabledGames.add(1) // Balloons Kotlin
+        }
+        
+        return enabledGames.random()
     }
     
     /**
