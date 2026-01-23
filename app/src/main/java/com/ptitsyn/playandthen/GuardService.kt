@@ -29,6 +29,13 @@ class GuardService : AccessibilityService() {
     override fun onServiceConnected() {
         super.onServiceConnected()
         
+        // Check if user has given consent
+        if (!ConsentActivity.hasConsent(this)) {
+            Log.w(TAG, "Accessibility service enabled but consent not given. Disabling self.")
+            disableSelf()
+            return
+        }
+        
         // Initialize GuardManager with gesture dispatcher
         guardManager = GuardManager(this) { gesture, callback ->
             dispatchGesture(gesture, callback, null)
