@@ -18,7 +18,7 @@ SUCCESS_COUNT=0
 FAIL_COUNT=0
 
 # Explicitly list games to build
-GAMES=("numbers" "match-words")
+GAMES=("numbers" "match-words" "alphabet" "opposites" "logic-add")
 
 echo "Found ${#GAMES[@]} games to build"
 echo ""

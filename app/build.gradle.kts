@@ -41,29 +41,23 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    
+    // Exclude development files from APK assets
+    @Suppress("DEPRECATION")
+    aaptOptions {
+        ignoreAssetsPattern = "!node_modules:!src:!*.ts:!tsconfig.json:!webpack.config.js:!package.json:!package-lock.json:!images-backup"
+    }
 }
 
 // Task to build TypeScript games before Android build
 tasks.register<Exec>("buildTypeScriptGames") {
-    description = "Builds all TypeScript games (numbers, match-words)"
+    description = "Builds all TypeScript games"
     group = "build"
     
-    val gamesDir = file("src/main/assets/games")
-    workingDir = gamesDir
+    workingDir = file("src/main/assets/games")
     
-    // Build each game
-    commandLine("bash", "-c", """
-        cd numbers && npm install && npm run build && cd .. &&
-        cd match-words && npm install && npm run build && cd ..
-    """.trimIndent())
-    
-    // Only run if source files changed
-    inputs.dir("src/main/assets/games/numbers/src")
-    inputs.dir("src/main/assets/games/match-words/src")
-    inputs.file("src/main/assets/games/numbers/package.json")
-    inputs.file("src/main/assets/games/match-words/package.json")
-    outputs.dir("src/main/assets/games/numbers/dist")
-    outputs.dir("src/main/assets/games/match-words/dist")
+    // Build all 5 games using the existing build script
+    commandLine("bash", "build-all.sh")
     
     doFirst {
         println("🎮 Building TypeScript games...")
