@@ -1,16 +1,16 @@
 # PlayAndThen - Play Store Listing
 
 ## Short Description (80 chars max)
-Educational games before YouTube Kids. Learn first, watch later!
+Smart YouTube Kids control: educational game breaks + language filtering.
 
 ## Full Description (4000 chars max)
-PlayAndThen helps parents turn screen time into learning time. Before your child can watch YouTube Kids, they complete a fun educational game.
+PlayAndThen helps parents manage YouTube Kids with educational game breaks and language filtering.
 
 🎮 HOW IT WORKS
-1. Your child opens YouTube Kids
-2. A fun educational game appears first
-3. After completing the game, YouTube Kids unlocks
-4. Learning happens naturally, every time!
+• Educational games appear before AND during YouTube Kids viewing
+• Creates healthy breaks between videos
+• Filters videos by language preference
+• Learning happens naturally throughout screen time!
 
 📚 EDUCATIONAL GAMES INCLUDED
 • Alphabet Recognition - Learn letters A-Z
@@ -19,11 +19,17 @@ PlayAndThen helps parents turn screen time into learning time. Before your child
 • Opposites - Learn opposite concepts
 • More games coming soon!
 
+🌍 LANGUAGE FILTERING
+• Filter YouTube Kids content by language
+• Ensure your child watches videos in preferred language
+• Great for bilingual families
+
 👨‍👩‍👧 PERFECT FOR PARENTS WHO WANT TO:
-• Add educational value to screen time
+• Add educational breaks during screen time
+• Control video language exposure
 • Create healthy viewing habits
 • Make learning fun and rewarding
-• Reduce mindless video watching
+• Reduce continuous video watching
 
 🔒 PRIVACY FIRST
 • No data collection - everything stays on your device
@@ -34,12 +40,13 @@ PlayAndThen helps parents turn screen time into learning time. Before your child
 ⚙️ EASY SETUP
 1. Install PlayAndThen
 2. Enable the accessibility service
-3. That's it! Games appear automatically before YouTube Kids
+3. Configure language preferences
+4. That's it! Games appear automatically
 
 💡 WHY PLAYANDTHEN?
-Children naturally want to watch videos. PlayAndThen uses this motivation to encourage learning. Instead of fighting screen time, make it work for your child's education.
+Instead of fighting screen time, make it work for your child's education. PlayAndThen creates natural learning breaks and ensures content is in your preferred language.
 
-Download now and transform screen time into learn time!
+Download now and take control of screen time!
 
 ---
 
