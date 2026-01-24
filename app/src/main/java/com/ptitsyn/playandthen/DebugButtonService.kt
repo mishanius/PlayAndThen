@@ -141,8 +141,9 @@ class DebugButtonService : Service() {
             "Balloons (Kotlin)" to "balloons_kt",
             "Numbers (TS)" to "numbers_ts",
             "Match Words (TS)" to "match_words_ts",
-            "Alphabet (TS)" to "alphabet_ts"
-            // "Opposites (TS)" to "opposites_ts"  // Not ready yet
+            "Alphabet (TS)" to "alphabet_ts",
+            "Opposites (TS)" to "opposites_ts",
+            "Logic Add (TS)" to "logic_add_ts"
         )
         
         games.forEach { (label, type) ->

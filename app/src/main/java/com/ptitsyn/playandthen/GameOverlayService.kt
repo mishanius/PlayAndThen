@@ -37,6 +37,7 @@ class GameOverlayService : Service() {
         const val GAME_TYPE_MATCH_WORDS_TS = "match_words_ts"
         const val GAME_TYPE_OPPOSITES_TS = "opposites_ts"
         const val GAME_TYPE_ALPHABET_TS = "alphabet_ts"
+        const val GAME_TYPE_LOGIC_ADD_TS = "logic_add_ts"
         
         fun startGameOverlay(context: Context, gameParams: GameParams) {
             val intent = Intent(context, GameOverlayService::class.java).apply {
@@ -294,6 +295,20 @@ class GameOverlayService : Service() {
                     }
                 }
             }
+            7 -> {
+                Log.d(TAG, "Selected LogicAddGame (JS/TS) (round $currentRound/$numberOfRounds)")
+                GridGameJs(
+                    context = this,
+                    currentRound = currentRound,
+                    totalRounds = numberOfRounds,
+                    gameType = "logic-add"
+                ).also { game ->
+                    game.onGameCompleted = {
+                        Log.d(TAG, "Round $currentRound/$numberOfRounds completed")
+                        onRoundCompleted()
+                    }
+                }
+            }
             else -> {
                 Log.d(TAG, "Selected NumbersGame (Kotlin fallback) (round $currentRound/$numberOfRounds)")
                 NumbersGame(this).also { game ->
@@ -351,6 +366,7 @@ class GameOverlayService : Service() {
                 GAME_TYPE_MATCH_WORDS_TS -> 4
                 GAME_TYPE_OPPOSITES_TS -> 5
                 GAME_TYPE_ALPHABET_TS -> 6
+                GAME_TYPE_LOGIC_ADD_TS -> 7
                 else -> 3
             }
         }
@@ -370,6 +386,12 @@ class GameOverlayService : Service() {
         }
         if (prefs.getBoolean(SettingsActivity.KEY_GAME_BALLOONS_ENABLED, true)) {
             enabledGames.add(1) // Balloons Kotlin
+        }
+        if (prefs.getBoolean(SettingsActivity.KEY_GAME_OPPOSITES_ENABLED, true)) {
+            enabledGames.add(5) // Opposites TS
+        }
+        if (prefs.getBoolean(SettingsActivity.KEY_GAME_LOGIC_ADD_ENABLED, true)) {
+            enabledGames.add(7) // Logic Add TS
         }
         
         return enabledGames.random()

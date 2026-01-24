@@ -30,6 +30,8 @@ class SettingsActivity : AppCompatActivity() {
         const val KEY_GAME_ALPHABET_ENABLED = "game_alphabet_enabled"
         const val KEY_GAME_MATCH_WORDS_ENABLED = "game_match_words_enabled"
         const val KEY_GAME_BALLOONS_ENABLED = "game_balloons_enabled"
+        const val KEY_GAME_OPPOSITES_ENABLED = "game_opposites_enabled"
+        const val KEY_GAME_LOGIC_ADD_ENABLED = "game_logic_add_enabled"
         
         // Default values
         const val DEFAULT_MAX_SKIPS = 5
@@ -58,6 +60,8 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var gameAlphabetCheckbox: CheckBox
     private lateinit var gameMatchWordsCheckbox: CheckBox
     private lateinit var gameBalloonsCheckbox: CheckBox
+    private lateinit var gameOppositesCheckbox: CheckBox
+    private lateinit var gameLogicAddCheckbox: CheckBox
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +88,8 @@ class SettingsActivity : AppCompatActivity() {
         gameAlphabetCheckbox = findViewById(R.id.gameAlphabetCheckbox)
         gameMatchWordsCheckbox = findViewById(R.id.gameMatchWordsCheckbox)
         gameBalloonsCheckbox = findViewById(R.id.gameBalloonsCheckbox)
+        gameOppositesCheckbox = findViewById(R.id.gameOppositesCheckbox)
+        gameLogicAddCheckbox = findViewById(R.id.gameLogicAddCheckbox)
     }
     
     private fun setupListeners() {
@@ -152,7 +158,8 @@ class SettingsActivity : AppCompatActivity() {
         // Game checkboxes - enforce at least one enabled
         val gameCheckboxListener = { checkbox: CheckBox, key: String, isChecked: Boolean ->
             val otherGamesEnabled = listOf(
-                gameNumbersCheckbox, gameAlphabetCheckbox, gameMatchWordsCheckbox, gameBalloonsCheckbox
+                gameNumbersCheckbox, gameAlphabetCheckbox, gameMatchWordsCheckbox, gameBalloonsCheckbox,
+                gameOppositesCheckbox, gameLogicAddCheckbox
             ).filter { it != checkbox }.any { it.isChecked }
             
             if (!isChecked && !otherGamesEnabled) {
@@ -173,6 +180,12 @@ class SettingsActivity : AppCompatActivity() {
         }
         gameBalloonsCheckbox.setOnCheckedChangeListener { _, isChecked ->
             gameCheckboxListener(gameBalloonsCheckbox, KEY_GAME_BALLOONS_ENABLED, isChecked)
+        }
+        gameOppositesCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            gameCheckboxListener(gameOppositesCheckbox, KEY_GAME_OPPOSITES_ENABLED, isChecked)
+        }
+        gameLogicAddCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            gameCheckboxListener(gameLogicAddCheckbox, KEY_GAME_LOGIC_ADD_ENABLED, isChecked)
         }
     }
     
@@ -200,6 +213,8 @@ class SettingsActivity : AppCompatActivity() {
         gameAlphabetCheckbox.isChecked = prefs.getBoolean(KEY_GAME_ALPHABET_ENABLED, true)
         gameMatchWordsCheckbox.isChecked = prefs.getBoolean(KEY_GAME_MATCH_WORDS_ENABLED, true)
         gameBalloonsCheckbox.isChecked = prefs.getBoolean(KEY_GAME_BALLOONS_ENABLED, true)
+        gameOppositesCheckbox.isChecked = prefs.getBoolean(KEY_GAME_OPPOSITES_ENABLED, true)
+        gameLogicAddCheckbox.isChecked = prefs.getBoolean(KEY_GAME_LOGIC_ADD_ENABLED, true)
     }
     
     private fun countEnabledGames(): Int {
@@ -208,6 +223,8 @@ class SettingsActivity : AppCompatActivity() {
         if (gameAlphabetCheckbox.isChecked) count++
         if (gameMatchWordsCheckbox.isChecked) count++
         if (gameBalloonsCheckbox.isChecked) count++
+        if (gameOppositesCheckbox.isChecked) count++
+        if (gameLogicAddCheckbox.isChecked) count++
         return count
     }
     
