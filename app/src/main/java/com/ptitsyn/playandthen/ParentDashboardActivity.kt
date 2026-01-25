@@ -30,7 +30,6 @@ class ParentDashboardActivity : AppCompatActivity() {
     private lateinit var roundsSeekBar: SeekBar
     private lateinit var roundsValue: TextView
     private lateinit var languageFilterSwitch: Switch
-    private lateinit var languageSpinner: Spinner
     private lateinit var languageSection: View
 
     private val games = listOf(
@@ -70,7 +69,6 @@ class ParentDashboardActivity : AppCompatActivity() {
         roundsSeekBar = findViewById(R.id.roundsSeekBar)
         roundsValue = findViewById(R.id.roundsValue)
         languageFilterSwitch = findViewById(R.id.languageFilterSwitch)
-        languageSpinner = findViewById(R.id.languageSpinner)
         languageSection = findViewById(R.id.languageSection)
         
         enableAccessibilityButton.setOnClickListener {
@@ -142,18 +140,55 @@ class ParentDashboardActivity : AppCompatActivity() {
             languageSection.visibility = if (isChecked) View.VISIBLE else View.GONE
         }
         
-        // Language spinner
-        val languages = arrayOf("English", "Hebrew", "Russian", "Spanish", "French", "German")
-        val languageCodes = arrayOf("en", "he", "ru", "es", "fr", "de")
-        languageSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, languages)
-        languageSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                prefs.edit().putString(SettingsActivity.KEY_ALLOWED_LANGUAGE, languageCodes[position]).apply()
-            }
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        // Language multi-select button
+        val languageButton = findViewById<Button>(R.id.languageSelectButton)
+        languageButton.setOnClickListener {
+            showLanguageMultiSelectDialog()
         }
         
         loadSettings()
+    }
+    
+    private fun showLanguageMultiSelectDialog() {
+        val languages = arrayOf("English", "Hebrew", "Russian", "Spanish", "French", "German")
+        val languageCodes = arrayOf("en", "he", "ru", "es", "fr", "de")
+        
+        val prefs = SettingsActivity.getPreferences(this)
+        val savedLanguages = prefs.getStringSet(SettingsActivity.KEY_ALLOWED_LANGUAGES, setOf("en")) ?: setOf("en")
+        val checkedItems = languageCodes.map { savedLanguages.contains(it) }.toBooleanArray()
+        
+        val selectedLanguages = savedLanguages.toMutableSet()
+        
+        android.app.AlertDialog.Builder(this)
+            .setTitle("Select Allowed Languages")
+            .setMultiChoiceItems(languages, checkedItems) { _, which, isChecked ->
+                if (isChecked) {
+                    selectedLanguages.add(languageCodes[which])
+                } else {
+                    selectedLanguages.remove(languageCodes[which])
+                }
+            }
+            .setPositiveButton("OK") { _, _ ->
+                if (selectedLanguages.isEmpty()) {
+                    selectedLanguages.add("en") // At least one language
+                    Toast.makeText(this, "At least one language required", Toast.LENGTH_SHORT).show()
+                }
+                prefs.edit().putStringSet(SettingsActivity.KEY_ALLOWED_LANGUAGES, selectedLanguages).apply()
+                updateLanguageButtonText()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+    
+    private fun updateLanguageButtonText() {
+        val prefs = SettingsActivity.getPreferences(this)
+        val savedLanguages = prefs.getStringSet(SettingsActivity.KEY_ALLOWED_LANGUAGES, setOf("en")) ?: setOf("en")
+        
+        val languageNames = mapOf("en" to "English", "he" to "Hebrew", "ru" to "Russian", "es" to "Spanish", "fr" to "French", "de" to "German")
+        val names = savedLanguages.mapNotNull { languageNames[it] }
+        
+        val languageButton = findViewById<Button>(R.id.languageSelectButton)
+        languageButton.text = if (names.size <= 2) names.joinToString(", ") else "${names.take(2).joinToString(", ")} +${names.size - 2}"
     }
     
     private fun loadSettings() {
@@ -171,10 +206,7 @@ class ParentDashboardActivity : AppCompatActivity() {
         languageFilterSwitch.isChecked = filterEnabled
         languageSection.visibility = if (filterEnabled) View.VISIBLE else View.GONE
         
-        val language = prefs.getString(SettingsActivity.KEY_ALLOWED_LANGUAGE, "en")
-        val languageCodes = arrayOf("en", "he", "ru", "es", "fr", "de")
-        val index = languageCodes.indexOf(language)
-        if (index >= 0) languageSpinner.setSelection(index)
+        updateLanguageButtonText()
     }
     
     private fun updateSetupStatus() {

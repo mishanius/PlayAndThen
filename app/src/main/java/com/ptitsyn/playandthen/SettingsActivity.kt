@@ -35,6 +35,7 @@ class SettingsActivity : AppCompatActivity() {
         const val KEY_NUMBER_OF_ROUNDS = "number_of_rounds"
         const val KEY_LANGUAGE_FILTER_ENABLED = "language_filter_enabled"
         const val KEY_ALLOWED_LANGUAGE = "allowed_language"
+        const val KEY_ALLOWED_LANGUAGES = "allowed_languages"
         
         // Default values
         const val DEFAULT_MAX_SKIPS = 5

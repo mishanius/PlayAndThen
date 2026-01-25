@@ -261,17 +261,22 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Allowed Language"
+                        android:text="Allowed Languages"
                         android:textSize="14sp"
                         android:textColor="@color/text_secondary" />
 
-                    <Spinner
-                        android:id="@+id/languageSpinner"
+                    <Button
+                        android:id="@+id/languageSelectButton"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginTop="4dp"
                         android:background="@drawable/input_background"
-                        android:padding="8dp" />
+                        android:text="English"
+                        android:textColor="@color/text_dark"
+                        android:textAllCaps="false"
+                        android:gravity="start|center_vertical"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp" />
                 </LinearLayout>
 
             </LinearLayout>
