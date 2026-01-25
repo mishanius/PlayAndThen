@@ -32,6 +32,9 @@ class SettingsActivity : AppCompatActivity() {
         const val KEY_GAME_BALLOONS_ENABLED = "game_balloons_enabled"
         const val KEY_GAME_OPPOSITES_ENABLED = "game_opposites_enabled"
         const val KEY_GAME_LOGIC_ADD_ENABLED = "game_logic_add_enabled"
+        const val KEY_NUMBER_OF_ROUNDS = "number_of_rounds"
+        const val KEY_LANGUAGE_FILTER_ENABLED = "language_filter_enabled"
+        const val KEY_ALLOWED_LANGUAGE = "allowed_language"
         
         // Default values
         const val DEFAULT_MAX_SKIPS = 5

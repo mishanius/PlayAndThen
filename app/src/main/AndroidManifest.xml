@@ -19,14 +19,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
         
-        <!-- Main Activity -->
+        <!-- Math Gate (Launcher) -->
         <activity
-            android:name="com.ptitsyn.playandthen.MainActivity"
+            android:name="com.ptitsyn.playandthen.MathGateActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <!-- Parent Dashboard -->
+        <activity
+            android:name="com.ptitsyn.playandthen.ParentDashboardActivity"
+            android:exported="false"
+            android:label="Parent Dashboard"/>
+
+        <!-- Main Activity (legacy, kept for compatibility) -->
+        <activity
+            android:name="com.ptitsyn.playandthen.MainActivity"
+            android:exported="false">
         </activity>
 
         <!-- Consent Activity -->

@@ -7,4 +7,12 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    
+    <!-- Dashboard Theme -->
+    <color name="purple_primary">#7C4DFF</color>
+    <color name="teal_primary">#00BCD4</color>
+    <color name="accent_yellow">#FFD54F</color>
+    <color name="text_dark">#333333</color>
+    <color name="text_secondary">#666666</color>
+    <color name="disabled_overlay">#80FFFFFF</color>
 </resources>
