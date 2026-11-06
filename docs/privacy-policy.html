@@ -25,7 +25,7 @@
 </head>
 <body>
     <h1>Privacy Policy for PlayAndThen</h1>
-    <p class="updated">Last updated: October 19, 2026</p>
+    <p class="updated">Last updated: November 6, 2026</p>
 
     <h2>Overview</h2>
     <p>PlayAndThen is a parental control app for Android. It helps parents manage screen time on YouTube and YouTube Kids by asking the child to complete a short educational game before or while watching videos. This policy explains what information the app uses, where it goes, and the choices you have.</p>
@@ -35,8 +35,8 @@
         <ul>
             <li>We do <strong>not</strong> ask for or collect names, email addresses, phone numbers, contacts, photos or precise location.</li>
             <li>There is <strong>no account</strong> to create, <strong>no advertising</strong>, and the app does <strong>not</strong> use the Android advertising ID.</li>
-            <li>Video titles and screen content read by the Accessibility Service are processed <strong>only on your device</strong> and are <strong>never sent</strong> anywhere.</li>
-            <li>The app sends <strong>anonymous</strong> usage statistics and crash reports to Google Firebase, and checks your subscription with RevenueCat and Google Play.</li>
+            <li>Video titles and screen content read by the Accessibility Service are processed <strong>on your device</strong>. If you turn on the language filter, Google ML Kit sends Google the <strong>detected language</strong> of a title (not the title), with an identifier for this install, for its diagnostics.</li>
+            <li>The app sends crash reports to Google Firebase from the first launch, usage statistics only after you accept the disclosure, gets its settings from Firebase Remote Config, and checks your subscription with RevenueCat and Google Play. These use <strong>random identifiers</strong> for this install: they are not your name, but they are <strong>not anonymous</strong>.</li>
             <li>We do <strong>not</strong> sell your information or use it for advertising.</li>
         </ul>
     </div>
@@ -44,11 +44,11 @@
     <h2>1. Information processed only on your device</h2>
     <p>PlayAndThen uses Android's Accessibility Service on YouTube and YouTube Kids to:</p>
     <ul>
-        <li>read video titles, to detect the language of a video (with Google ML Kit, which runs on the device);</li>
+        <li>read video titles, to detect the language of a video when you turn on the language filter (with Google ML Kit, which runs on the device);</li>
         <li>read the playback state, to know when a video starts and ends and how long it has been watched;</li>
         <li>find screen elements such as the video player, to pause or skip a video and to show a game.</li>
     </ul>
-    <p>This information is used only for these purposes, on your device. It is not stored by the app, not sent to any server and not shared with anyone. Google ML Kit may send Google anonymous diagnostics about how the language-detection library performs (for example the device model, app version and error codes), but never the text it analyses.</p>
+    <p>This information is used only for these purposes, on your device. The titles, playback state and screen elements are not stored by the app, not sent to any server and not shared with anyone. When the language filter is on, Google ML Kit sends Google the languages it identified, a per-installation identifier, device and app information (such as the device model and app version), performance metrics and error codes, for Google's diagnostics and usage analytics. It never sends the title it analyses, and Google does not transfer this data to third parties.</p>
 
     <h2>2. Information stored on your device</h2>
     <ul>
@@ -63,26 +63,26 @@
     <p>The app uses the following services. They process information on our behalf and under their own privacy policies.</p>
 
     <h3>Google Firebase Analytics</h3>
-    <p>Analytics starts only after you accept the disclosure in the app; before that, no analytics events are sent. We receive anonymous usage statistics to understand how the app is used and to improve it:</p>
+    <p>Analytics starts only after you accept the disclosure in the app; before that, no analytics events are sent. We receive usage statistics, linked to a random app-instance identifier (not to your name), to understand how the app is used and to improve it:</p>
     <ul>
         <li>App events: a game was shown or completed (which game, how many rounds, the game trigger mode), a video was skipped, a search redirect happened, the accessibility service was enabled, the disclosure was accepted, and which setting was changed (its name, not its value).</li>
-        <li>Information the Firebase SDK collects automatically: a random app-instance identifier, device model, operating system and app version, device language, approximate region (country or city, derived from the IP address), and session and engagement information.</li>
+        <li>Information the Firebase SDK collects automatically: a random app-instance identifier, device model, operating system and app version, device language, approximate region (country or city, derived from the IP address), session and engagement information, and in-app purchase and subscription events.</li>
     </ul>
     <p>Firebase Analytics does not receive video titles, screen content, detected video languages or the advertising ID.</p>
 
     <h3>Google Firebase Crashlytics</h3>
-    <p>If the app crashes, a crash report is sent: technical details of the error, device model, operating system and app version, and a random installation identifier. We use it only to find and fix bugs.</p>
+    <p>From the first launch, if the app crashes, a crash report is sent: technical details of the error, device model, operating system and app version, and a random installation identifier. We use it only to find and fix bugs.</p>
 
     <h3>Google Firebase Remote Config</h3>
-    <p>The app downloads app settings (for example, whether a promotion is active). This uses a random Firebase installation identifier and the app version.</p>
+    <p>From the first launch, the app downloads app settings (for example, whether a promotion is active). This uses a random Firebase installation identifier and the app version, and Google may use the IP address to work out the country, for settings that differ by country.</p>
 
     <h3>RevenueCat and Google Play Billing</h3>
-    <p>If you buy a subscription, Google Play processes the payment. We never see your card or payment details. RevenueCat receives the purchase details from Google Play (product, purchase token, dates and status) and a random anonymous user identifier, so the app can confirm and restore your subscription.</p>
+    <p>If you buy a subscription, Google Play processes the payment. We never see your card or payment details. RevenueCat receives the purchase details from Google Play (product, purchase token, dates and status) and a random user identifier that RevenueCat creates for this install. The app checks the subscription with RevenueCat at every launch, from the first one, so it can confirm and restore your subscription.</p>
 
     <p>Privacy policies of these providers: <a href="https://firebase.google.com/support/privacy">Firebase</a>, <a href="https://policies.google.com/privacy">Google</a>, <a href="https://www.revenuecat.com/privacy">RevenueCat</a>.</p>
 
     <h2>4. Children's privacy</h2>
-    <p>PlayAndThen is set up and controlled by a parent, and the child plays its games on the device. We do not knowingly collect personal information from children: the app asks for no names, accounts or contact details, shows no ads and does not use the advertising ID. The only information sent off the device is the anonymous usage statistics, crash reports and subscription checks described above, used to run, improve and fix the app. A parent can ask us to delete this information at any time (see "Contact us").</p>
+    <p>PlayAndThen is set up and controlled by a parent, and the child plays its games on the device. We do not knowingly collect personal information from children: the app asks for no names, accounts or contact details, shows no ads and does not use the advertising ID. The only information sent off the device is what is described above: crash reports, settings and subscription checks, usage statistics after the disclosure is accepted, and the language filter's diagnostics from Google ML Kit, all linked to random identifiers for the install, not to a name, and used to run, improve and fix the app. A parent can ask us to delete this information at any time (see "Contact us").</p>
 
     <h2>5. How long we keep information</h2>
     <p>Information on your device is kept until you delete it or uninstall the app. Information held by our service providers is kept only as long as needed for the purposes above and is deleted according to their retention settings.</p>
@@ -94,7 +94,7 @@
     <ul>
         <li>You can turn off the PlayAndThen accessibility service at any time in the Android accessibility settings.</li>
         <li>You can delete all on-device data by clearing the app's storage or uninstalling the app.</li>
-        <li>You can ask us to delete the anonymous statistics linked to your device by contacting us.</li>
+        <li>You can ask us to delete the statistics linked to your device's random identifiers by contacting us.</li>
     </ul>
 
     <h2>8. Changes to this policy</h2>
