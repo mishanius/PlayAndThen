@@ -56,7 +56,7 @@
         <li>Game progress and statistics, such as which game stages were answered correctly, used to adapt the games and to show the statistics screen.</li>
         <li>Whether you accepted the accessibility disclosure, your promotion status (kept in encrypted storage), and a cached copy of your subscription status kept by the RevenueCat library.</li>
     </ul>
-    <p>This data stays on the device. It is deleted when you uninstall the app or clear its storage (Settings &gt; Apps &gt; PlayAndThen &gt; Storage &gt; Clear storage).</p>
+    <p>This data stays on the device. It is deleted when you uninstall the app or clear its storage, except the RevenueCat identifier, which Google Block Store can restore after a purchase (see section 3) (Settings &gt; Apps &gt; PlayAndThen &gt; Storage &gt; Clear storage).</p>
     <p><strong>Android backup:</strong> the app turns off Android backup and device-to-device transfer, so this data is not copied to your Google account or to a new device.</p>
 
     <h2>3. Information sent to service providers</h2>
@@ -77,7 +77,7 @@
     <p>From the first launch, the app downloads app settings (for example, whether a promotion is active). This uses a random Firebase installation identifier and the app version, and Google may use the IP address to work out the country, for settings that differ by country.</p>
 
     <h3>RevenueCat and Google Play Billing</h3>
-    <p>If you buy a subscription, Google Play processes the payment. We never see your card or payment details. RevenueCat receives the purchase details from Google Play (product, purchase token, dates and status) and a random user identifier that RevenueCat creates for this install. The app checks the subscription with RevenueCat at every launch, from the first one, so it can confirm and restore your subscription.</p>
+    <p>If you buy a subscription, Google Play processes the payment. We never see your card or payment details. RevenueCat receives the purchase details from Google Play (product, purchase token, dates and status) and a random user identifier that RevenueCat creates for this install. The app checks the subscription with RevenueCat at every launch, from the first one, so it can confirm and restore your subscription. After a purchase, the RevenueCat library also saves this identifier in Google Block Store on the device, marked for your own Google cloud backup, so the subscription can be restored after an uninstall or on a new device; it is not sent to RevenueCat or to us by Block Store.</p>
 
     <p>Privacy policies of these providers: <a href="https://firebase.google.com/support/privacy">Firebase</a>, <a href="https://policies.google.com/privacy">Google</a>, <a href="https://www.revenuecat.com/privacy">RevenueCat</a>.</p>
 
