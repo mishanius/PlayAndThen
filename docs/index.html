@@ -101,12 +101,14 @@ section { padding: 84px 0; }
 .game div { padding: 14px 18px 18px; }
 .game h3 { font-size: 19px; }
 .game p { margin-top: 4px; font-size: 15.5px; color: var(--ink-soft); line-height: 1.5; }
-.pro-extra { margin-top: 22px; padding: 18px 22px; border-radius: var(--radius); background: #FFF8E6; border: 2px dashed #D9A93A; max-width: 760px; }
+.pro-extra { margin-top: 22px; padding: 18px 22px; border-radius: var(--radius); background: #FFF0C7; max-width: 760px; }
 
 /* Parents stay in control */
 .control { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; margin-top: 40px; }
 .ctl { background: var(--card); border-radius: var(--radius); box-shadow: var(--toy); padding: 18px; display: flex; flex-direction: column; }
-.ctl .shot { border-radius: 16px; overflow: hidden; background: #F4F6FA; height: 300px; display: flex; align-items: flex-start; justify-content: center; }
+.ctl .shot { position: relative; border-radius: 16px; overflow: hidden; background: #F4F6FA; height: 300px; display: flex; align-items: flex-start; justify-content: center; }
+.ctl .shot:not(.card)::after { /* the tall screens fade out into the card, never cut mid-row */
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 96px; background: linear-gradient(rgba(255, 255, 255, 0), #fff); }
 .ctl .shot img { width: 100%; }
 .ctl .shot.card { height: auto; padding: 40px 10px; background: var(--ink); } /* the notification at its own width, readable */
 .ctl .shot.card img { border-radius: 14px; }
@@ -130,6 +132,8 @@ footer .legal { margin-top: 20px; color: #B9C2D3; font-size: 13.5px; }
 @media (max-width: 600px) { /* two games a row on a phone */
   .games { grid-template-columns: 1fr 1fr; gap: 14px; }
   .game div { padding: 10px 12px 14px; } .game h3 { font-size: 16px; } .game p { font-size: 14px; }
+  .free3 .game:nth-child(3) { grid-column: 1 / -1; display: flex; align-items: center; } /* never alone in its row: full width, art beside the text */
+  .free3 .game:nth-child(3) img { width: 46%; flex: 0 0 46%; }
 }
 .nw { white-space: nowrap; } /* a Hebrew prefix stays on the line of its word (ב-YouTube) */
 @media (max-width: 880px) {
@@ -192,15 +196,15 @@ footer .legal { margin-top: 20px; color: #B9C2D3; font-size: 13.5px; }
 
       <div class="group">
         <div class="group-head"><span class="tag free" data-t="free">Free</span><p data-t="freep">3 games that take turns</p></div>
-        <ul class="games">
+        <ul class="games free3">
           <li class="game"><img src="landing/game-balloons.webp" width="400" height="292" alt="" loading="lazy"><div><h3 data-t="g1">Balloons</h3><p data-t="g1p">Count the balloons and find the card with the number you hear</p></div></li>
           <li class="game"><img src="landing/game-choose-color.webp" width="400" height="292" alt="" loading="lazy"><div><h3 data-t="g2">Choose Color</h3><p data-t="g2p">Listen to the color name and find it</p></div></li>
-          <li class="game"><img src="landing/game-follow-instructions.webp" width="400" height="292" alt="" loading="lazy"><div><h3 data-t="g3">Follow Instructions</h3><p data-t="g3p">Listen and find the picture that matches</p></div></li>
+          <li class="game"><img src="landing/game-follow-instructions.webp" width="400" height="300" alt="" loading="lazy"><div><h3 data-t="g3">Follow Instructions</h3><p data-t="g3p">Listen and find the picture that matches</p></div></li>
         </ul>
       </div>
 
       <div class="group">
-        <div class="group-head"><span class="tag pro">Pro</span><p data-t="prop">All 11 games</p></div>
+        <div class="group-head"><span class="tag pro">Pro</span><p data-t="prop">+ 8 more games</p></div>
         <ul class="games">
           <li class="game"><img src="landing/game-number-sort.webp" width="400" height="292" alt="" loading="lazy"><div><h3 data-t="g4">Number Sort</h3><p data-t="g4p">Drag the numbers into order, smallest to biggest</p></div></li>
           <li class="game"><img src="landing/game-block-tower.webp" width="400" height="300" alt="" loading="lazy"><div><h3 data-t="g5">Block Tower</h3><p data-t="g5p">Listen to the number, drop blocks onto the tower and count them</p></div></li>
@@ -292,7 +296,7 @@ footer .legal { margin-top: 20px; color: #B9C2D3; font-size: 13.5px; }
       s3: 'משחק, ואז הסרטון', s3p: 'משחק למידה קצר מופיע מעל הסרטון. הילד משחק כדקה, והסרטון ממשיך.',
       games: '11 משחקי למידה',
       gamesp: 'מספרים, צבעים, מילים ואותיות. מפלצת חמודה מקריאה כל שאלה. כל תשובה נכונה זוכה לחגיגה, ואחרי טעות המשחק מראה את התשובה הנכונה ועובר לשאלה חדשה.',
-      free: 'חינם', freep: '3 משחקים, כולם פעילים ומתחלפים ביניהם', prop: 'כל 11 המשחקים',
+      free: 'חינם', freep: '3 משחקים, כולם פעילים ומתחלפים ביניהם', prop: 'ועוד 8 משחקים',
       g1: 'בלונים', g1p: 'סופרים את הבלונים ומוצאים את הכרטיס עם המספר ששומעים',
       g2: 'בחר צבע', g2p: 'מקשיבים לשם הצבע ומוצאים אותו',
       g3: 'עקוב אחר הוראות', g3p: 'מקשיבים ומוצאים את התמונה המתאימה',
