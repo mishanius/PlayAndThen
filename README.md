@@ -25,4 +25,4 @@ PlayAndThen uses Android's Accessibility Service to enhance your child's educati
 - No user data is collected or transmitted
 
 ### Contact
-For questions about our accessibility service usage: playandthenapp@gmail.com
+For questions about our accessibility service usage: mishaannatech@gmail.com
