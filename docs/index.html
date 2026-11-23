@@ -1,108 +1,336 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy - PlayAndThen</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            line-height: 1.6;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            color: #333;
-        }
-        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-        h2 { color: #2980b9; margin-top: 30px; }
-        h3 { color: #34495e; }
-        ul { padding-left: 20px; }
-        li { margin: 8px 0; }
-        .updated { color: #7f8c8d; font-style: italic; }
-        .highlight { background: #e8f4f8; padding: 15px; border-radius: 5px; margin: 15px 0; }
-        a { color: #3498db; }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PlayAndThen: learning games for kids during screen time</title>
+<meta name="description" content="PlayAndThen turns screen time into learning time for children aged 3 to 7: a short learning game appears while they watch, then the video continues.">
+<link rel="canonical" href="https://mishanius.github.io/PlayAndThen/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mishanius.github.io/PlayAndThen/">
+<meta property="og:title" content="PlayAndThen: learning games for kids during screen time">
+<meta property="og:description" content="A short learning game while your child watches, then the video continues. For kids 3 to 7, on Android.">
+<meta property="og:image" content="https://mishanius.github.io/PlayAndThen/landing/og.jpg">
+<meta property="og:image:width" content="1024">
+<meta property="og:image:height" content="500">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PlayAndThen: learning games for kids during screen time">
+<meta name="twitter:description" content="A short learning game while your child watches, then the video continues. For kids 3 to 7, on Android.">
+<meta name="twitter:image" content="https://mishanius.github.io/PlayAndThen/landing/og.jpg">
+<meta name="theme-color" content="#FFE3C4">
+<link rel="icon" type="image/png" sizes="32x32" href="landing/favicon-32.png">
+<link rel="apple-touch-icon" href="landing/icon-180.png">
+<link rel="preload" href="landing/fredoka-600.woff2" as="font" type="font/woff2" crossorigin>
+<script>
+  /* Hebrew only by the browser's language or ?lang=he (?lang=en forces English); set before the first paint. */
+  (function () {
+    var q = /[?&]lang=(he|en)\b/.exec(location.search), l = q ? q[1] : '';
+    if (!l) { var n = navigator.languages || [navigator.language || '']; l = /^(he|iw)\b/i.test(n[0] || '') ? 'he' : 'en'; }
+    if (l === 'he') { var h = document.documentElement; h.lang = 'he'; h.dir = 'rtl'; h.className = 'he'; }
+  })();
+</script>
+<style>
+@font-face { font-family: 'Fredoka'; font-weight: 600; font-display: swap; src: url(landing/fredoka-600.woff2) format('woff2'); }
+:root {
+  --ink: #2B3A55; --ink-soft: #46546E; --wall: #FFF4E0; --wall-2: #FFE3C4; --floor: #EDB987; --floor-lip: #F6D2A6;
+  --lip: #DCC7A8; --card: #fff; --red: #FF5A5F; --gold: #FFB400; --teal: #2EC4B6; --blue: #3A86FF; --violet: #8338EC; --pink: #FF70A6;
+  --green: #1E9A5C; --radius: 24px; --toy: 0 8px 0 var(--lip), 0 14px 28px rgba(60, 30, 10, .14);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html.he body { visibility: hidden; } /* until the Hebrew text is in (the script at the end of the page), so no English flash */
+body {
+  margin: 0; color: var(--ink); background: linear-gradient(180deg, var(--wall) 0, var(--wall-2) 640px, var(--wall) 1400px);
+  font: 400 17px/1.6 system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', 'Noto Sans Hebrew', Arial, sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+h1, h2, h3, .brand, .step-n { font-family: 'Fredoka', system-ui, sans-serif; font-weight: 600; line-height: 1.12; margin: 0; }
+h1 { font-size: clamp(36px, 6vw, 62px); letter-spacing: -.5px; text-wrap: balance; }
+h2 { font-size: clamp(28px, 4vw, 40px); text-wrap: balance; }
+h3 { font-size: 21px; }
+p { margin: 0; }
+a { color: var(--ink); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+a:focus-visible, .badge:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; border-radius: 8px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+img { display: block; max-width: 100%; height: auto; }
+
+/* The top bar */
+.top { display: flex; align-items: center; justify-content: space-between; padding-top: 18px; padding-bottom: 18px; }
+.brand { display: flex; align-items: center; gap: 10px; font-size: 24px; text-decoration: none; }
+.brand img { width: 40px; height: 40px; border-radius: 50%; }
+
+/* The hero: the playroom, with the phone and the monster standing on its floor */
+.hero { position: relative; overflow: hidden; padding-bottom: 0; }
+.hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 32px; align-items: end; }
+.hero-copy { padding: 40px 0 120px; }
+.hero-copy .lede { text-wrap: pretty; margin-top: 20px; font-size: 20px; color: var(--ink-soft); max-width: 34em; }
+.hero-copy .note { margin-top: 18px; font-size: 16px; color: var(--ink-soft); }
+.badge { display: inline-block; margin-top: 22px; margin-inline-start: -14px; } /* the badge art has its own clear space */
+.badge img { height: 84px; width: auto; }
+.scene { position: relative; display: flex; justify-content: center; align-items: flex-end; gap: 8px; padding-bottom: 54px; }
+.scene::after { /* the floor under them, with its light top edge */
+  content: ''; position: absolute; left: -200vw; right: -200vw; bottom: 0; height: 70px;
+  background: linear-gradient(var(--floor-lip), var(--floor-lip)) top / 100% 7px no-repeat, var(--floor);
+}
+.phone { position: relative; z-index: 1; width: min(270px, 62vw); padding: 11px; border-radius: 40px; background: var(--ink);
+  box-shadow: 0 18px 0 rgba(60, 30, 10, .14), 0 28px 50px rgba(60, 30, 10, .22); margin-bottom: -16px; }
+.phone img { border-radius: 30px; width: 100%; }
+.monster { position: relative; z-index: 2; width: min(230px, 44vw); margin-inline-start: -52px; margin-bottom: -8px; }
+
+/* Sections */
+section { padding: 84px 0; }
+.kicker { font-size: 18px; color: var(--ink-soft); margin-top: 12px; max-width: 40em; }
+
+/* How it works: 3 steps in order */
+.steps { list-style: none; margin: 40px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+.step { background: var(--card); border-radius: var(--radius); box-shadow: var(--toy); padding: 26px 24px 28px; }
+.step-n { display: inline-flex; align-items: center; justify-content: center; width: 52px; height: 52px; border-radius: 50%;
+  font-size: 28px; color: var(--ink); border: 3px solid var(--ink); margin-bottom: 14px; }
+.step:nth-child(1) .step-n { background: #FF7F83; } .step:nth-child(2) .step-n { background: #74A7FF; } /* lighter red and blue: ink reads 4.5:1 */ .step:nth-child(3) .step-n { background: var(--teal); }
+.step p { margin-top: 8px; color: var(--ink-soft); }
+
+/* The games: toy cards on a shelf */
+.group { margin-top: 44px; }
+.group-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.tag { display: inline-block; padding: 3px 12px; border-radius: 999px; font: 600 14px/1.6 'Fredoka', system-ui, sans-serif; letter-spacing: .3px; border: 2px solid var(--ink); }
+.tag.free { background: #DDF6E8; color: #135F3A; }
+.tag.pro { background: #FFF0C7; color: #6B4A00; }
+.group-head p { color: var(--ink-soft); }
+.games { list-style: none; margin: 22px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 22px; }
+.game { background: var(--card); border-radius: var(--radius); box-shadow: var(--toy); overflow: hidden; }
+.game img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--wall-2); }
+.game div { padding: 14px 18px 18px; }
+.game h3 { font-size: 19px; }
+.game p { margin-top: 4px; font-size: 15.5px; color: var(--ink-soft); line-height: 1.5; }
+.pro-extra { margin-top: 22px; padding: 18px 22px; border-radius: var(--radius); background: #FFF8E6; border: 2px dashed #D9A93A; max-width: 760px; }
+
+/* Parents stay in control */
+.control { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; margin-top: 40px; }
+.ctl { background: var(--card); border-radius: var(--radius); box-shadow: var(--toy); padding: 18px; display: flex; flex-direction: column; }
+.ctl .shot { border-radius: 16px; overflow: hidden; background: #F4F6FA; height: 300px; display: flex; align-items: flex-start; justify-content: center; }
+.ctl .shot img { width: 100%; }
+.ctl .shot.card { height: auto; padding: 40px 10px; background: var(--ink); } /* the notification at its own width, readable */
+.ctl .shot.card img { border-radius: 14px; }
+.ctl h3 { margin-top: 16px; } .ctl p { margin-top: 6px; color: var(--ink-soft); }
+
+/* Your data */
+.data { background: var(--card); border-radius: var(--radius); box-shadow: var(--toy); padding: 32px clamp(22px, 4vw, 44px); margin-top: 36px; max-width: 860px; }
+.data ul { margin: 0; padding-inline-start: 22px; } .data li { margin: 10px 0; }
+.data .more { margin-top: 18px; font-weight: 600; }
+
+/* The last call, on the floor again */
+.end { text-align: center; padding: 72px 0 96px; background: linear-gradient(var(--floor-lip), var(--floor-lip)) top / 100% 7px no-repeat, var(--floor); }
+.end h2 { max-width: 18em; margin: 0 auto; }
+.end p { margin-top: 12px; }
+.end .badge { margin-inline-start: 0; }
+footer { background: var(--ink); color: #E9EDF5; padding: 36px 0 44px; font-size: 15.5px; }
+footer a { color: #fff; }
+footer .cols { display: flex; flex-wrap: wrap; gap: 14px 40px; justify-content: space-between; }
+footer .legal { margin-top: 20px; color: #B9C2D3; font-size: 13.5px; }
+
+@media (max-width: 600px) { /* two games a row on a phone */
+  .games { grid-template-columns: 1fr 1fr; gap: 14px; }
+  .game div { padding: 10px 12px 14px; } .game h3 { font-size: 16px; } .game p { font-size: 14px; }
+}
+.nw { white-space: nowrap; } /* a Hebrew prefix stays on the line of its word (ב-YouTube) */
+@media (max-width: 880px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 0; }
+  .hero-copy { padding: 18px 0 8px; text-align: center; }
+  .hero-copy .lede { margin-left: auto; margin-right: auto; }
+  .badge { margin-inline-start: 0; }
+  .steps, .control { grid-template-columns: 1fr; }
+  .ctl .shot { height: 260px; }
+  section { padding: 60px 0; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .monster { animation: breathe 2.6s ease-in-out infinite alternate; transform-origin: 50% 100%; }
+  @keyframes breathe { to { transform: scale(.985, 1.03); } }
+}
+</style>
 </head>
 <body>
-    <h1>Privacy Policy for PlayAndThen</h1>
-    <p class="updated">Last updated: November 6, 2026</p>
+<header class="wrap top">
+  <a class="brand" href="./"><img src="landing/icon-180.png" alt="" width="40" height="40">PlayAndThen</a>
+</header>
 
-    <h2>Overview</h2>
-    <p>PlayAndThen is a parental control app for Android. It helps parents manage screen time on YouTube and YouTube Kids by asking the child to complete a short educational game before or while watching videos. This policy explains what information the app uses, where it goes, and the choices you have.</p>
-
-    <div class="highlight">
-        <h2>In short</h2>
-        <ul>
-            <li>We do <strong>not</strong> ask for or collect names, email addresses, phone numbers, contacts, photos or precise location.</li>
-            <li>There is <strong>no account</strong> to create, <strong>no advertising</strong>, and the app does <strong>not</strong> use the Android advertising ID.</li>
-            <li>Video titles and screen content read by the Accessibility Service are processed <strong>on your device</strong>. If you turn on the language filter, Google ML Kit sends Google the <strong>detected language</strong> of a title (not the title), with an identifier for this install, for its diagnostics.</li>
-            <li>The app sends crash reports to Google Firebase from the first launch, usage statistics only after you accept the disclosure, gets its settings from Firebase Remote Config, and checks your subscription with RevenueCat and Google Play. These use <strong>random identifiers</strong> for this install: they are not your name, but they are <strong>not anonymous</strong>.</li>
-            <li>We do <strong>not</strong> sell your information or use it for advertising.</li>
-        </ul>
+<main>
+  <div class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <h1 data-t="h1">Screen time that turns into learning time</h1>
+        <p class="lede" data-t="lede">While your child watches YouTube or YouTube Kids, a short learning game appears at the pace you set. Your child plays for about a minute, and then the video continues.</p>
+        <p class="note" data-t="note">For children aged 3 to 7, on Android. Start free with 3 games.</p>
+        <a class="badge play" href="https://play.google.com/store/apps/details?id=com.ptitsyn.playandthen&amp;hl=en">
+          <img class="en-only" src="landing/google-play-badge-en.png" alt="Get it on Google Play" width="646" height="250">
+          <img class="he-only" src="landing/google-play-badge-iw.png" alt="כעת ב-Google Play" width="646" height="250" loading="lazy">
+        </a>
+      </div>
+      <div class="scene">
+        <div class="phone">
+          <img class="en-only" src="landing/game-en.webp" width="540" height="830" alt="The Balloons game on a phone: the right number card is found, with confetti and a cheering monster">
+          <img class="he-only" src="landing/game-he.webp" width="540" height="830" alt="משחק הבלונים בטלפון: נמצא הכרטיס עם המספר הנכון, עם קונפטי ומפלצת שמריעה" loading="lazy">
+        </div>
+        <img class="monster" src="landing/monster.webp" width="520" height="524" alt="">
+      </div>
     </div>
+  </div>
 
-    <h2>1. Information processed only on your device</h2>
-    <p>PlayAndThen uses Android's Accessibility Service on YouTube and YouTube Kids to:</p>
-    <ul>
-        <li>read video titles, to detect the language of a video when you turn on the language filter (with Google ML Kit, which runs on the device);</li>
-        <li>read the playback state, to know when a video starts and ends and how long it has been watched;</li>
-        <li>find screen elements such as the video player, to pause or skip a video and to show a game.</li>
-    </ul>
-    <p>This information is used only for these purposes, on your device. The titles, playback state and screen elements are not stored by the app, not sent to any server and not shared with anyone. When the language filter is on, Google ML Kit sends Google the languages it identified, a per-installation identifier, device and app information (such as the device model and app version), performance metrics and error codes, for Google's diagnostics and usage analytics. It never sends the title it analyses, and Google does not transfer this data to third parties.</p>
+  <section id="how">
+    <div class="wrap">
+      <h2 data-t="how">How it works</h2>
+      <ol class="steps">
+        <li class="step"><span class="step-n">1</span><h3 data-t="s1">Set it up once</h3><p data-t="s1p">PlayAndThen uses Android's Accessibility Service to know that a video is playing. You turn it on after a full explanation in the app, and you can turn it off at any time.</p></li>
+        <li class="step"><span class="step-n">2</span><h3 data-t="s2">Your child watches</h3><p data-t="s2p">Works with YouTube and YouTube Kids. Choose how often a game appears: every few minutes, or on every new video.</p></li>
+        <li class="step"><span class="step-n">3</span><h3 data-t="s3">A game, then the video</h3><p data-t="s3p">A short learning game appears on top of the video. Your child plays for about a minute, and then the video continues.</p></li>
+      </ol>
+    </div>
+  </section>
 
-    <h2>2. Information stored on your device</h2>
-    <ul>
-        <li>App settings, such as the chosen games, game frequency, allowed video languages and the child's language.</li>
-        <li>Game progress and statistics, such as which game stages were answered correctly, used to adapt the games and to show the statistics screen.</li>
-        <li>Whether you accepted the accessibility disclosure, your promotion status (kept in encrypted storage), and a cached copy of your subscription status kept by the RevenueCat library.</li>
-    </ul>
-    <p>This data stays on the device. It is deleted when you uninstall the app or clear its storage, except the RevenueCat identifier, which Google Block Store can restore after a purchase (see section 3) (Settings &gt; Apps &gt; PlayAndThen &gt; Storage &gt; Clear storage).</p>
-    <p><strong>Android backup:</strong> the app turns off Android backup and device-to-device transfer, so this data is not copied to your Google account or to a new device.</p>
+  <section id="games">
+    <div class="wrap">
+      <h2 data-t="games">11 learning games</h2>
+      <p class="kicker" data-t="gamesp">Numbers, colors, words and letters. Eight play in English and three in Hebrew. A friendly monster reads each question aloud. Every right answer gets a celebration; after a miss, the game shows the right answer and moves on to a new question.</p>
 
-    <h2>3. Information sent to service providers</h2>
-    <p>The app uses the following services. They process information on our behalf and under their own privacy policies.</p>
+      <div class="group">
+        <div class="group-head"><span class="tag free" data-t="free">Free</span><p data-t="freep">3 games that take turns</p></div>
+        <ul class="games">
+          <li class="game"><img src="landing/game-balloons.webp" width="400" height="292" alt="" loading="lazy"><div><h3 data-t="g1">Balloons</h3><p data-t="g1p">Count the balloons and find the card with the number you hear</p></div></li>
+          <li class="game"><img src="landing/game-choose-color.webp" width="400" height="292" alt="" loading="lazy"><div><h3 data-t="g2">Choose Color</h3><p data-t="g2p">Listen to the color name and find it</p></div></li>
+          <li class="game"><img src="landing/game-follow-instructions.webp" width="400" height="292" alt="" loading="lazy"><div><h3 data-t="g3">Follow Instructions</h3><p data-t="g3p">Listen and find the picture that matches</p></div></li>
+        </ul>
+      </div>
 
-    <h3>Google Firebase Analytics</h3>
-    <p>Analytics starts only after you accept the disclosure in the app; before that, no analytics events are sent. We receive usage statistics, linked to a random app-instance identifier (not to your name), to understand how the app is used and to improve it:</p>
-    <ul>
-        <li>App events: a game was shown or completed (which game, how many rounds, the game trigger mode), a video was skipped, a search redirect happened, the accessibility service was enabled, the disclosure was accepted, and which setting was changed (its name, not its value).</li>
-        <li>Information the Firebase SDK collects automatically: a random app-instance identifier, device model, operating system and app version, device language, approximate region (country or city, derived from the IP address), session and engagement information, and in-app purchase and subscription events.</li>
-    </ul>
-    <p>Firebase Analytics does not receive video titles, screen content, detected video languages or the advertising ID.</p>
+      <div class="group">
+        <div class="group-head"><span class="tag pro">Pro</span><p data-t="prop">All 11 games</p></div>
+        <ul class="games">
+          <li class="game"><img src="landing/game-number-sort.webp" width="400" height="292" alt="" loading="lazy"><div><h3 data-t="g4">Number Sort</h3><p data-t="g4p">Drag the numbers into order, smallest to biggest</p></div></li>
+          <li class="game"><img src="landing/game-block-tower.webp" width="400" height="300" alt="" loading="lazy"><div><h3 data-t="g5">Block Tower</h3><p data-t="g5p">Listen to the number, drop blocks onto the tower and count them</p></div></li>
+          <li class="game"><img src="landing/game-star-runner.webp" width="400" height="300" alt="" loading="lazy"><div><h3 data-t="g6">Star Runner</h3><p data-t="g6p">Run and jump to catch the number stars in the right order</p></div></li>
+          <li class="game"><img src="landing/game-simon.webp" width="400" height="292" alt="" loading="lazy"><div><h3 data-t="g7">Simon</h3><p data-t="g7p">Watch the pads light up, then tap them in the same order</p></div></li>
+          <li class="game"><img src="landing/game-learn-words.webp" width="400" height="300" alt="" loading="lazy"><div><h3 data-t="g8">Learn New Words</h3><p data-t="g8p">120 words with pictures and spoken clues</p></div></li>
+          <li class="game"><img src="landing/game-alphabet.webp" width="400" height="292" alt="" loading="lazy"><div><h3 data-t="g9">Alphabet</h3><p data-t="g9p">Hebrew letters: listen to the letter and find it</p></div></li>
+          <li class="game"><img src="landing/game-alphabet-garden.webp" width="400" height="300" alt="" loading="lazy"><div><h3 data-t="g10">Alphabet Garden</h3><p data-t="g10p">Hebrew letters: find the letter you hear and catch the flowers it is on</p></div></li>
+          <li class="game"><img src="landing/game-picture-puzzle.webp" width="400" height="300" alt="" loading="lazy"><div><h3 data-t="g11">Picture Puzzle</h3><p data-t="g11p">Drag the pieces into place and complete the picture (in Hebrew)</p></div></li>
+        </ul>
+        <p class="pro-extra" data-t="filter">Pro also adds the language filter: videos in languages you did not allow are skipped, and after repeated skips the app can open a child-safe search you set.</p>
+      </div>
+    </div>
+  </section>
 
-    <h3>Google Firebase Crashlytics</h3>
-    <p>From the first launch, if the app crashes, a crash report is sent: technical details of the error, device model, operating system and app version, and a random installation identifier. We use it only to find and fix bugs.</p>
+  <section id="parents">
+    <div class="wrap">
+      <h2 data-t="ctl">Parents stay in control</h2>
+      <div class="control">
+        <div class="ctl">
+          <div class="shot"><img class="en-only" src="landing/home-en.webp" width="540" height="924" alt="The parent home screen with the on and off switch" loading="lazy"><img class="he-only" src="landing/home-he.webp" width="540" height="924" alt="מסך הבית של ההורים עם מתג ההפעלה והכיבוי" loading="lazy"></div>
+          <h3 data-t="c1">On when you want it</h3><p data-t="c1p">Switch PlayAndThen on and off from its home screen. All settings sit behind a parent lock.</p>
+        </div>
+        <div class="ctl">
+          <div class="shot card"><img class="en-only" src="landing/notification-en.webp" width="720" height="250" alt="The PlayAndThen notification with its Turn off button" loading="lazy"><img class="he-only" src="landing/notification-he.webp" width="720" height="250" alt="ההתראה של PlayAndThen עם כפתור הכיבוי" loading="lazy"></div>
+          <h3 data-t="c2">Off only with a parent</h3><p data-t="c2p">While PlayAndThen is on, a notification shows a Turn off button that first asks a parent question. When it is off, one tap turns it back on.</p>
+        </div>
+        <div class="ctl">
+          <div class="shot"><img class="en-only" src="landing/timing-en.webp" width="540" height="924" alt="The timing setting, with a game on a timer" loading="lazy"><img class="he-only" src="landing/timing-he.webp" width="540" height="924" alt="הגדרת התזמון, עם משחק לפי טיימר" loading="lazy"></div>
+          <h3 data-t="c3">You choose how often</h3><p data-t="c3p">A game every few minutes, at the pace you set, or on every new video.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <h3>Google Firebase Remote Config</h3>
-    <p>From the first launch, the app downloads app settings (for example, whether a promotion is active). This uses a random Firebase installation identifier and the app version, and Google may use the IP address to work out the country, for settings that differ by country.</p>
+  <section id="data">
+    <div class="wrap">
+      <h2 data-t="data">Your data</h2>
+      <div class="data">
+        <ul>
+          <li data-t="d1">No account and no ads; the app reads no advertising ID.</li>
+          <li data-t="d2">Video titles and screen content are processed on your device and are not collected.</li>
+          <li data-t="d3">From the first launch, the app sends crash reports, loads its settings and checks the subscription, each with a random ID for this install.</li>
+          <li data-t="d4">Game and settings events, purchases and your approximate region go to Firebase Analytics only after you accept the in-app disclosure.</li>
+          <li data-t="d5">With the Pro language filter on, a title's language is checked on the device and Google gets only the detected language, never the title.</li>
+          <li data-t="d6">To have your data deleted, write to <a href="mailto:playandthenapp@gmail.com">playandthenapp@gmail.com</a>.</li>
+        </ul>
+        <p class="more"><a href="privacy-policy.html" data-t="policy">Read the full privacy policy</a></p>
+      </div>
+    </div>
+  </section>
 
-    <h3>RevenueCat and Google Play Billing</h3>
-    <p>If you buy a subscription, Google Play processes the payment. We never see your card or payment details. RevenueCat receives the purchase details from Google Play (product, purchase token, dates and status) and a random user identifier that RevenueCat creates for this install. The app checks the subscription with RevenueCat at every launch, from the first one, so it can confirm and restore your subscription. After a purchase, the RevenueCat library also saves this identifier in Google Block Store on the device, marked for your own Google cloud backup, so the subscription can be restored after an uninstall or on a new device; it is not sent to RevenueCat or to us by Block Store.</p>
+  <div class="end">
+    <div class="wrap">
+      <h2 data-t="endh">Try it with the 3 free games</h2>
+      <p data-t="endp">The interface is in English, Hebrew and Russian.</p>
+      <a class="badge play" href="https://play.google.com/store/apps/details?id=com.ptitsyn.playandthen&amp;hl=en">
+        <img class="en-only" src="landing/google-play-badge-en.png" alt="Get it on Google Play" width="646" height="250" loading="lazy">
+        <img class="he-only" src="landing/google-play-badge-iw.png" alt="כעת ב-Google Play" width="646" height="250" loading="lazy">
+      </a>
+    </div>
+  </div>
+</main>
 
-    <p>Privacy policies of these providers: <a href="https://firebase.google.com/support/privacy">Firebase</a>, <a href="https://policies.google.com/privacy">Google</a>, <a href="https://www.revenuecat.com/privacy">RevenueCat</a>.</p>
+<footer>
+  <div class="wrap">
+    <div class="cols">
+      <p><span data-t="by">PlayAndThen, by Anna Kontorovich</span></p>
+      <p><span data-t="contact">Contact:</span> <a href="mailto:playandthenapp@gmail.com">playandthenapp@gmail.com</a></p>
+      <p><a href="privacy-policy.html" data-t="policy2">Privacy policy</a></p>
+    </div>
+    <p class="legal" data-t="legal">Google Play and the Google Play logo are trademarks of Google LLC. YouTube and YouTube Kids are trademarks of Google LLC. PlayAndThen is not affiliated with Google.</p>
+  </div>
+</footer>
 
-    <h2>4. Children's privacy</h2>
-    <p>PlayAndThen is set up and controlled by a parent, and the child plays its games on the device. We do not knowingly collect personal information from children: the app asks for no names, accounts or contact details, shows no ads and does not use the advertising ID. The only information sent off the device is what is described above: crash reports, settings and subscription checks, usage statistics after the disclosure is accepted, and the language filter's diagnostics from Google ML Kit, all linked to random identifiers for the install, not to a name, and used to run, improve and fix the app. A parent can ask us to delete this information at any time (see "Contact us").</p>
-
-    <h2>5. How long we keep information</h2>
-    <p>Information on your device is kept until you delete it or uninstall the app. Information held by our service providers is kept only as long as needed for the purposes above and is deleted according to their retention settings.</p>
-
-    <h2>6. Security</h2>
-    <p>Information sent to our service providers is encrypted in transit (HTTPS). Promotion status on the device is kept in encrypted storage.</p>
-
-    <h2>7. Your choices</h2>
-    <ul>
-        <li>You can turn off the PlayAndThen accessibility service at any time in the Android accessibility settings.</li>
-        <li>You can delete all on-device data by clearing the app's storage or uninstalling the app.</li>
-        <li>You can ask us to delete the statistics linked to your device's random identifiers by contacting us.</li>
-    </ul>
-
-    <h2>8. Changes to this policy</h2>
-    <p>We may update this policy from time to time. We will post the new version on this page and update the "Last updated" date.</p>
-
-    <h2>Contact us</h2>
-    <p>PlayAndThen is operated by Anna Kontorovich, the developer shown on Google Play.</p>
-    <p>If you have any questions about this policy or want your information deleted, contact us at:</p>
-    <p><strong>Email</strong>: <a href="mailto:playandthenapp@gmail.com">playandthenapp@gmail.com</a></p>
+<style>html:not(.he) .he-only, html.he .en-only { display: none; }</style>
+<script>
+  /* The Hebrew text (from the Hebrew Play listing). English is the page itself. */
+  (function () {
+    var h = document.documentElement;
+    if (h.className !== 'he') return;
+    var T = {
+      h1: 'זמן מסך שהופך לזמן למידה',
+      lede: 'בזמן שהילד צופה ב-YouTube או ב-YouTube Kids, משחק למידה קצר מופיע על המסך בקצב שאתם קובעים: הילד משחק כדקה, והסרטון ממשיך.',
+      note: 'לילדים בגילאי 3 עד 7, באנדרואיד. מתחילים בחינם עם 3 משחקים.',
+      how: 'איך זה עובד',
+      s1: 'מגדירים פעם אחת', s1p: 'האפליקציה משתמשת בשירות הנגישות של אנדרואיד כדי לזהות מתי מתנגן סרטון. אתם מפעילים את השירות אחרי הסבר מלא באפליקציה, ואפשר לכבות אותו בכל רגע.',
+      s2: 'הילד צופה', s2p: 'עובד עם YouTube ו-YouTube Kids. אתם קובעים כל כמה זמן מופיע משחק: כל כמה דקות, או בכל סרטון חדש.',
+      s3: 'משחק, ואז הסרטון', s3p: 'משחק למידה קצר מופיע מעל הסרטון. הילד משחק כדקה, והסרטון ממשיך.',
+      games: '11 משחקי למידה',
+      gamesp: 'מספרים, צבעים, מילים ואותיות. מפלצת חמודה מקריאה כל שאלה. כל תשובה נכונה זוכה לחגיגה, ואחרי טעות המשחק מראה את התשובה הנכונה ועובר לשאלה חדשה.',
+      free: 'חינם', freep: '3 משחקים, כולם פעילים ומתחלפים ביניהם', prop: 'כל 11 המשחקים',
+      g1: 'בלונים', g1p: 'סופרים את הבלונים ומוצאים את הכרטיס עם המספר ששומעים',
+      g2: 'בחר צבע', g2p: 'מקשיבים לשם הצבע ומוצאים אותו',
+      g3: 'עקוב אחר הוראות', g3p: 'מקשיבים ומוצאים את התמונה המתאימה',
+      g4: 'סדר מספרים', g4p: 'גוררים את המספרים לפי הסדר, מהקטן לגדול',
+      g5: 'מגדל קוביות', g5p: 'מקשיבים למספר, מפילים קוביות על המגדל וסופרים אותן',
+      g6: 'רץ הכוכבים', g6p: 'רצים, קופצים ותופסים את הכוכבים עם המספרים לפי הסדר',
+      g7: 'סיימון', g7p: 'צופים בכפתורים שנדלקים ולוחצים עליהם באותו הסדר',
+      g8: 'לומדים מילים חדשות', g8p: '120 מילים עם תמונות ורמזים קוליים',
+      g9: 'אלף-בית', g9p: 'מקשיבים לאות ומוצאים אותה',
+      g10: 'גן האותיות', g10p: 'מוצאים את האות ששומעים ותופסים את הפרחים שהאות מופיעה עליהם',
+      g11: 'פאזל תמונות', g11p: 'גוררים את החלקים למקומם ומרכיבים את התמונה',
+      filter: 'Pro מוסיף גם סינון שפות: האפליקציה מדלגת על סרטונים בשפות שלא אישרתם, ואחרי כמה דילוגים היא יכולה לפתוח חיפוש בטוח לילדים שהגדרתם.',
+      ctl: 'ההורים בשליטה',
+      c1: 'פועל כשאתם רוצים', c1p: 'מפעילים ומכבים את PlayAndThen ממסך הבית שלו. כל ההגדרות מוגנות בנעילת הורים.',
+      c2: 'רק הורה מכבה', c2p: 'כש-PlayAndThen פועל, מוצגת התראה עם כפתור כיבוי, ולפני הכיבוי מופיעה שאלת הורים. כשהוא כבוי, לחיצה אחת מפעילה אותו שוב.',
+      c3: 'אתם קובעים כל כמה זמן', c3p: 'משחק כל כמה דקות, בקצב שאתם קובעים, או בכל סרטון חדש.',
+      data: 'המידע שלכם',
+      d1: 'בלי חשבון ובלי פרסומות; האפליקציה לא ניגשת למזהה הפרסום.',
+      d2: 'כותרות הסרטונים ותוכן המסך מעובדים במכשיר שלכם ולא נאספים.',
+      d3: 'מההפעלה הראשונה האפליקציה שולחת דיווחי קריסות, טוענת את ההגדרות שלה ובודקת את המנוי, כל אחד מהם עם מזהה אקראי של ההתקנה.',
+      d4: 'אירועי משחק והגדרות, רכישות והאזור המשוער שלכם נשלחים ל-Firebase Analytics רק אחרי שאתם נותנים הסכמה במסך ההסבר באפליקציה.',
+      d5: 'כשסינון השפות של Pro פועל, שפת הכותרת נבדקת במכשיר, ו-Google מקבלת רק את השפה שזוהתה, ולא את הכותרת עצמה.',
+      d6: 'למחיקת המידע שלכם כתבו <span class="nw">ל-<a href="mailto:playandthenapp@gmail.com">playandthenapp@gmail.com</a></span>.',
+      policy: 'למדיניות הפרטיות המלאה',
+      endh: 'נסו בחינם את 3 המשחקים', endp: 'הממשק בעברית, באנגלית וברוסית.',
+      by: 'PlayAndThen, מאת אנה קונטורוביץ׳', contact: 'יצירת קשר:', policy2: 'מדיניות פרטיות',
+      legal: 'Google Play והלוגו של Google Play הם סימנים מסחריים של Google LLC. YouTube ו-YouTube Kids הם סימנים מסחריים של Google LLC. PlayAndThen אינו קשור ל-Google.'
+    };
+    var els = document.querySelectorAll('[data-t]');
+    for (var i = 0; i < els.length; i++) { // a one-letter Hebrew prefix and its Latin word never part at a line end
+      var k = els[i].getAttribute('data-t');
+      if (T[k]) els[i].innerHTML = T[k].replace(/(^|[\s(])([\u05D0-\u05EA]{1,2})-([A-Za-z][\w.]*(?: Kids| Play| Analytics)?)/g, '$1<span class="nw">$2-$3</span>');
+    }
+    var play = document.querySelectorAll('a.play');
+    for (var j = 0; j < play.length; j++) play[j].href = play[j].href.replace('hl=en', 'hl=iw');
+    document.title = 'PlayAndThen: משחקי למידה לילדים בזמן מסך';
+    document.body.style.visibility = 'visible';
+  })();
+</script>
 </body>
 </html>
